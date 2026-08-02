@@ -4307,6 +4307,7 @@ export type Database = {
           theme_mode: string
         }[]
       }
+      get_exam_access_map: { Args: never; Returns: Json }
       get_public_certifications: {
         Args: never
         Returns: {
