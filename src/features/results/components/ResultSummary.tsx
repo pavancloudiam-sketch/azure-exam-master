@@ -16,6 +16,11 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 
 export function ResultSummary({ result }: { result: AttemptResult }) {
   const attemptDate = new Date(result.submitted_at);
+  const scoredCount = result.scored_count ?? result.total_questions;
+  const pilotCount = result.pilot_count ?? 0;
+  const earned = result.earned_points;
+  const available = result.available_points;
+  const partialCredit = earned !== undefined && available !== undefined && available > 0;
 
   return (
     <div className="space-y-8">
@@ -26,8 +31,18 @@ export function ResultSummary({ result }: { result: AttemptResult }) {
             <p className="mt-1 text-sm text-muted-foreground">
               Attempted {attemptDate.toLocaleDateString()} at{" "}
               {attemptDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ·{" "}
-              {result.mode === "timed" ? "Timed mode" : "Practice mode"}
+              {result.mode === "timed" || result.mode === "realistic_mock"
+                ? "Timed mode"
+                : "Practice mode"}
             </p>
+            {result.blueprint_name ? (
+              <p className="mt-1 text-sm text-muted-foreground">
+                Exam plan: {result.blueprint_name}
+                {result.blueprint_duration_minutes
+                  ? ` · ${result.blueprint_duration_minutes} minutes allowed`
+                  : ""}
+              </p>
+            ) : null}
           </div>
           <div
             className={cn(
@@ -61,10 +76,24 @@ export function ResultSummary({ result }: { result: AttemptResult }) {
           <Stat
             label="Raw score"
             value={`${result.raw_score} / ${result.max_score}`}
-            hint="Points earned"
+            hint={
+              partialCredit
+                ? `${Number(earned).toFixed(2)} of ${Number(available).toFixed(2)} points, partial credit included`
+                : "Points earned"
+            }
           />
           <Stat label="Time taken" value={formatDuration(result.duration_seconds)} />
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Your scaled score is calculated from the points you earned on the {scoredCount} scored
+          question{scoredCount === 1 ? "" : "s"} and placed on a 1–1000 scale
+          {result.scoring_model_version ? ` (scoring model ${result.scoring_model_version})` : ""}.
+          {pilotCount > 0
+            ? ` This sitting also included ${pilotCount} unscored trial question${
+                pilotCount === 1 ? "" : "s"
+              }, which did not affect your score.`
+            : ""}
+        </p>
       </section>
 
       <section aria-labelledby="questions-heading">
@@ -72,7 +101,11 @@ export function ResultSummary({ result }: { result: AttemptResult }) {
           Questions
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Total questions" value={String(result.total_questions)} />
+          <Stat
+            label="Total questions"
+            value={String(result.total_questions)}
+            {...(pilotCount > 0 ? { hint: `${scoredCount} scored, ${pilotCount} unscored` } : {})}
+          />
           <Stat label="Correct" value={String(result.correct_count)} />
           <Stat label="Incorrect" value={String(result.incorrect_count)} />
           <Stat label="Unanswered" value={String(result.unanswered_count)} />
@@ -114,6 +147,10 @@ export function ResultSummary({ result }: { result: AttemptResult }) {
             </table>
           </div>
         )}
+        <p className="mt-3 text-xs text-muted-foreground">
+          Domain percentages use the points you earned, so partially correct answers count towards
+          the skill area. Unscored trial questions are excluded.
+        </p>
       </section>
 
       <p className="text-xs text-muted-foreground">
