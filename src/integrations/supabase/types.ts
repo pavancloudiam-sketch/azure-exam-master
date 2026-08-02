@@ -394,6 +394,7 @@ export type Database = {
         Row: {
           answered_at: string
           attempt_id: string
+          earned_points: number | null
           id: string
           is_correct: boolean | null
           marked_for_review: boolean
@@ -403,6 +404,7 @@ export type Database = {
         Insert: {
           answered_at?: string
           attempt_id: string
+          earned_points?: number | null
           id?: string
           is_correct?: boolean | null
           marked_for_review?: boolean
@@ -412,6 +414,7 @@ export type Database = {
         Update: {
           answered_at?: string
           attempt_id?: string
+          earned_points?: number | null
           id?: string
           is_correct?: boolean | null
           marked_for_review?: boolean
@@ -435,11 +438,76 @@ export type Database = {
           },
         ]
       }
+      attempt_questions: {
+        Row: {
+          attempt_id: string
+          created_at: string
+          domain_id: string | null
+          id: string
+          is_pilot: boolean
+          option_order: string[]
+          points: number
+          position: number
+          question_id: string
+          scoring_method: string
+        }
+        Insert: {
+          attempt_id: string
+          created_at?: string
+          domain_id?: string | null
+          id?: string
+          is_pilot?: boolean
+          option_order?: string[]
+          points?: number
+          position: number
+          question_id: string
+          scoring_method?: string
+        }
+        Update: {
+          attempt_id?: string
+          created_at?: string
+          domain_id?: string | null
+          id?: string
+          is_pilot?: boolean
+          option_order?: string[]
+          points?: number
+          position?: number
+          question_id?: string
+          scoring_method?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempt_questions_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempt_questions_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempt_questions_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attempts: {
         Row: {
+          available_points: number | null
+          blueprint_id: string | null
+          blueprint_snapshot: Json
           cancelled_at: string | null
           created_at: string
           duration_seconds: number | null
+          earned_points: number | null
           exam_id: string
           expires_at: string | null
           id: string
@@ -447,18 +515,25 @@ export type Database = {
           mode: string
           passed: boolean | null
           percentage: number | null
+          pilot_count: number
           raw_score: number | null
           scaled_score: number | null
           score: number | null
+          scored_count: number
+          scoring_model_version: string | null
           started_at: string
           status: string
           submitted_at: string | null
           user_id: string
         }
         Insert: {
+          available_points?: number | null
+          blueprint_id?: string | null
+          blueprint_snapshot?: Json
           cancelled_at?: string | null
           created_at?: string
           duration_seconds?: number | null
+          earned_points?: number | null
           exam_id: string
           expires_at?: string | null
           id?: string
@@ -466,18 +541,25 @@ export type Database = {
           mode?: string
           passed?: boolean | null
           percentage?: number | null
+          pilot_count?: number
           raw_score?: number | null
           scaled_score?: number | null
           score?: number | null
+          scored_count?: number
+          scoring_model_version?: string | null
           started_at?: string
           status?: string
           submitted_at?: string | null
           user_id: string
         }
         Update: {
+          available_points?: number | null
+          blueprint_id?: string | null
+          blueprint_snapshot?: Json
           cancelled_at?: string | null
           created_at?: string
           duration_seconds?: number | null
+          earned_points?: number | null
           exam_id?: string
           expires_at?: string | null
           id?: string
@@ -485,9 +567,12 @@ export type Database = {
           mode?: string
           passed?: boolean | null
           percentage?: number | null
+          pilot_count?: number
           raw_score?: number | null
           scaled_score?: number | null
           score?: number | null
+          scored_count?: number
+          scoring_model_version?: string | null
           started_at?: string
           status?: string
           submitted_at?: string | null
@@ -495,11 +580,25 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "attempts_blueprint_id_fkey"
+            columns: ["blueprint_id"]
+            isOneToOne: false
+            referencedRelation: "exam_blueprints"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "attempts_exam_id_fkey"
             columns: ["exam_id"]
             isOneToOne: false
             referencedRelation: "exams"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempts_scoring_model_version_fkey"
+            columns: ["scoring_model_version"]
+            isOneToOne: false
+            referencedRelation: "scoring_models"
+            referencedColumns: ["version"]
           },
         ]
       }
@@ -1202,6 +1301,159 @@ export type Database = {
           },
         ]
       }
+      exam_blueprint_domains: {
+        Row: {
+          blueprint_id: string
+          created_at: string
+          domain_id: string
+          id: string
+          max_percent: number
+          min_percent: number
+          sort_order: number
+          topic_quotas: Json
+          updated_at: string
+        }
+        Insert: {
+          blueprint_id: string
+          created_at?: string
+          domain_id: string
+          id?: string
+          max_percent: number
+          min_percent: number
+          sort_order?: number
+          topic_quotas?: Json
+          updated_at?: string
+        }
+        Update: {
+          blueprint_id?: string
+          created_at?: string
+          domain_id?: string
+          id?: string
+          max_percent?: number
+          min_percent?: number
+          sort_order?: number
+          topic_quotas?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_blueprint_domains_blueprint_id_fkey"
+            columns: ["blueprint_id"]
+            isOneToOne: false
+            referencedRelation: "exam_blueprints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_blueprint_domains_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_blueprints: {
+        Row: {
+          allow_case_study_return: boolean
+          allow_partial_credit: boolean
+          allow_repeats: boolean
+          allowed_question_types: string[]
+          case_study_count: number
+          certification_id: string
+          created_at: string
+          created_by: string | null
+          default_question_count: number
+          description: string | null
+          difficulty_distribution: Json
+          duration_minutes: number | null
+          id: string
+          is_published: boolean
+          max_question_count: number
+          max_repeat_count: number
+          min_question_count: number
+          mode: string
+          name: string
+          passing_scaled_score: number
+          pilot_question_count: number
+          randomize_options: boolean
+          randomize_questions: boolean
+          repetition_cooldown_days: number
+          scoring_model_version: string
+          updated_at: string
+        }
+        Insert: {
+          allow_case_study_return?: boolean
+          allow_partial_credit?: boolean
+          allow_repeats?: boolean
+          allowed_question_types?: string[]
+          case_study_count?: number
+          certification_id: string
+          created_at?: string
+          created_by?: string | null
+          default_question_count?: number
+          description?: string | null
+          difficulty_distribution?: Json
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          max_question_count?: number
+          max_repeat_count?: number
+          min_question_count?: number
+          mode?: string
+          name: string
+          passing_scaled_score?: number
+          pilot_question_count?: number
+          randomize_options?: boolean
+          randomize_questions?: boolean
+          repetition_cooldown_days?: number
+          scoring_model_version?: string
+          updated_at?: string
+        }
+        Update: {
+          allow_case_study_return?: boolean
+          allow_partial_credit?: boolean
+          allow_repeats?: boolean
+          allowed_question_types?: string[]
+          case_study_count?: number
+          certification_id?: string
+          created_at?: string
+          created_by?: string | null
+          default_question_count?: number
+          description?: string | null
+          difficulty_distribution?: Json
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          max_question_count?: number
+          max_repeat_count?: number
+          min_question_count?: number
+          mode?: string
+          name?: string
+          passing_scaled_score?: number
+          pilot_question_count?: number
+          randomize_options?: boolean
+          randomize_questions?: boolean
+          repetition_cooldown_days?: number
+          scoring_model_version?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_blueprints_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_blueprints_scoring_model_version_fkey"
+            columns: ["scoring_model_version"]
+            isOneToOne: false
+            referencedRelation: "scoring_models"
+            referencedColumns: ["version"]
+          },
+        ]
+      }
       exam_questions: {
         Row: {
           created_at: string
@@ -1245,6 +1497,7 @@ export type Database = {
         Row: {
           allow_practice: boolean
           allow_timed: boolean
+          blueprint_id: string | null
           certification_id: string
           created_at: string
           description: string | null
@@ -1261,6 +1514,7 @@ export type Database = {
         Insert: {
           allow_practice?: boolean
           allow_timed?: boolean
+          blueprint_id?: string | null
           certification_id: string
           created_at?: string
           description?: string | null
@@ -1277,6 +1531,7 @@ export type Database = {
         Update: {
           allow_practice?: boolean
           allow_timed?: boolean
+          blueprint_id?: string | null
           certification_id?: string
           created_at?: string
           description?: string | null
@@ -1291,6 +1546,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "exams_blueprint_id_fkey"
+            columns: ["blueprint_id"]
+            isOneToOne: false
+            referencedRelation: "exam_blueprints"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "exams_certification_id_fkey"
             columns: ["certification_id"]
@@ -2537,6 +2799,63 @@ export type Database = {
         }
         Relationships: []
       }
+      question_exposure: {
+        Row: {
+          attempt_ids: string[]
+          first_presented_at: string
+          last_attempt_id: string | null
+          last_marked_for_review: boolean
+          last_presented_at: string
+          last_result: string | null
+          last_time_spent_seconds: number | null
+          question_id: string
+          times_presented: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempt_ids?: string[]
+          first_presented_at?: string
+          last_attempt_id?: string | null
+          last_marked_for_review?: boolean
+          last_presented_at?: string
+          last_result?: string | null
+          last_time_spent_seconds?: number | null
+          question_id: string
+          times_presented?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempt_ids?: string[]
+          first_presented_at?: string
+          last_attempt_id?: string | null
+          last_marked_for_review?: boolean
+          last_presented_at?: string
+          last_result?: string | null
+          last_time_spent_seconds?: number | null
+          question_id?: string
+          times_presented?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_exposure_last_attempt_id_fkey"
+            columns: ["last_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_exposure_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       question_options: {
         Row: {
           content: string
@@ -2587,11 +2906,14 @@ export type Database = {
           import_batch_id: string | null
           is_active: boolean
           is_archived: boolean
+          is_pilot_eligible: boolean
           points: number
           question_type: string
           review_flag: boolean
           scenario: string | null
+          scoring_method: string
           sort_order: number
+          source_page: string | null
           stem: string
           tags: string[]
           topic_id: string | null
@@ -2608,11 +2930,14 @@ export type Database = {
           import_batch_id?: string | null
           is_active?: boolean
           is_archived?: boolean
+          is_pilot_eligible?: boolean
           points?: number
           question_type?: string
           review_flag?: boolean
           scenario?: string | null
+          scoring_method?: string
           sort_order?: number
+          source_page?: string | null
           stem: string
           tags?: string[]
           topic_id?: string | null
@@ -2629,11 +2954,14 @@ export type Database = {
           import_batch_id?: string | null
           is_active?: boolean
           is_archived?: boolean
+          is_pilot_eligible?: boolean
           points?: number
           question_type?: string
           review_flag?: boolean
           scenario?: string | null
+          scoring_method?: string
           sort_order?: number
+          source_page?: string | null
           stem?: string
           tags?: string[]
           topic_id?: string | null
@@ -2862,6 +3190,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      scoring_models: {
+        Row: {
+          created_at: string
+          default_threshold: number
+          description: string
+          formula: string
+          is_active: boolean
+          label: string
+          max_scaled_score: number
+          min_scaled_score: number
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          default_threshold?: number
+          description: string
+          formula: string
+          is_active?: boolean
+          label: string
+          max_scaled_score?: number
+          min_scaled_score?: number
+          version: string
+        }
+        Update: {
+          created_at?: string
+          default_threshold?: number
+          description?: string
+          formula?: string
+          is_active?: boolean
+          label?: string
+          max_scaled_score?: number
+          min_scaled_score?: number
+          version?: string
+        }
+        Relationships: []
       }
       subscriptions: {
         Row: {
@@ -3180,7 +3544,25 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      allocate_blueprint_domains: {
+        Args: { _blueprint_id: string; _total: number }
+        Returns: {
+          domain_id: string
+          target: number
+        }[]
+      }
       apply_retention_policies: { Args: never; Returns: Json }
+      attempt_item_set: {
+        Args: { _attempt_id: string }
+        Returns: {
+          is_pilot: boolean
+          option_order: string[]
+          points: number
+          question_id: string
+          scoring_method: string
+          sort_order: number
+        }[]
+      }
       attest_import_batch: {
         Args: { _batch_id: string; _statement: string }
         Returns: {
@@ -3246,9 +3628,13 @@ export type Database = {
       cancel_attempt: {
         Args: { _attempt_id: string }
         Returns: {
+          available_points: number | null
+          blueprint_id: string | null
+          blueprint_snapshot: Json
           cancelled_at: string | null
           created_at: string
           duration_seconds: number | null
+          earned_points: number | null
           exam_id: string
           expires_at: string | null
           id: string
@@ -3256,9 +3642,12 @@ export type Database = {
           mode: string
           passed: boolean | null
           percentage: number | null
+          pilot_count: number
           raw_score: number | null
           scaled_score: number | null
           score: number | null
+          scored_count: number
+          scoring_model_version: string | null
           started_at: string
           status: string
           submitted_at: string | null
@@ -3656,9 +4045,11 @@ export type Database = {
         Args: { _attempt_id: string }
         Returns: {
           attempt_id: string
+          available_points: number
           correct_count: number
           domains: Json
           duration_seconds: number
+          earned_points: number
           exam_title: string
           incorrect_count: number
           max_score: number
@@ -3666,8 +4057,11 @@ export type Database = {
           passed: boolean
           passing_score: number
           percentage: number
+          pilot_count: number
           raw_score: number
           scaled_score: number
+          scored_count: number
+          scoring_model_version: string
           submitted_at: string
           total_questions: number
           unanswered_count: number
@@ -3678,7 +4072,9 @@ export type Database = {
         Returns: {
           difficulty: string
           domain_name: string
+          earned_points: number
           explanation: string
+          is_pilot: boolean
           marked_for_review: boolean
           options: Json
           points: number
@@ -4167,16 +4563,34 @@ export type Database = {
       }
       run_nightly_retention: { Args: { _force?: boolean }; Returns: Json }
       scan_import_duplicates: { Args: { _batch_id: string }; Returns: number }
+      select_attempt_questions: {
+        Args: {
+          _attempt_id: string
+          _blueprint_id: string
+          _domain_filter?: string
+          _total: number
+        }
+        Returns: Json
+      }
       set_organization_webhook_status: {
         Args: { _status: string; _webhook_id: string }
         Returns: boolean
       }
       start_attempt: {
-        Args: { _exam_id: string; _mode: string }
+        Args: {
+          _domain_id?: string
+          _exam_id: string
+          _mode: string
+          _question_count?: number
+        }
         Returns: {
+          available_points: number | null
+          blueprint_id: string | null
+          blueprint_snapshot: Json
           cancelled_at: string | null
           created_at: string
           duration_seconds: number | null
+          earned_points: number | null
           exam_id: string
           expires_at: string | null
           id: string
@@ -4184,9 +4598,12 @@ export type Database = {
           mode: string
           passed: boolean | null
           percentage: number | null
+          pilot_count: number
           raw_score: number | null
           scaled_score: number | null
           score: number | null
+          scored_count: number
+          scoring_model_version: string | null
           started_at: string
           status: string
           submitted_at: string | null
@@ -4202,9 +4619,13 @@ export type Database = {
       submit_attempt: {
         Args: { _attempt_id: string }
         Returns: {
+          available_points: number | null
+          blueprint_id: string | null
+          blueprint_snapshot: Json
           cancelled_at: string | null
           created_at: string
           duration_seconds: number | null
+          earned_points: number | null
           exam_id: string
           expires_at: string | null
           id: string
@@ -4212,9 +4633,12 @@ export type Database = {
           mode: string
           passed: boolean | null
           percentage: number | null
+          pilot_count: number
           raw_score: number | null
           scaled_score: number | null
           score: number | null
+          scored_count: number
+          scoring_model_version: string | null
           started_at: string
           status: string
           submitted_at: string | null
