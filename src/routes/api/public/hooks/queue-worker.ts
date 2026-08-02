@@ -25,7 +25,7 @@ function authorize(request: Request) {
   const publishable =
     process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"] ?? "";
   const apikey = request.headers.get("apikey");
-  return Boolean(publishable) && Boolean(apikey) && safeEqual(apikey, publishable);
+  return Boolean(publishable) && Boolean(apikey) && safeEqual(apikey ?? "", publishable);
 }
 
 export const Route = createFileRoute("/api/public/hooks/queue-worker")({
