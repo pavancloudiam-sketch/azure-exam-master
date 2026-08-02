@@ -10,7 +10,14 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
     if (error != null && typeof error === "object" && "statusCode" in error) {
       throw error;
     }
-    console.error(error);
+    // Unexpected server error: report through the shared observability bridge
+    // (structured line + Sentry when configured) before the safe HTML page.
+    const { reportServerEvent } = await import("@/features/observability/monitoring.server");
+    await reportServerEvent({
+      code: "server.unexpected_error",
+      message: "Unhandled server error",
+      cause: error,
+    });
     return new Response(renderErrorPage(), {
       status: 500,
       headers: { "content-type": "text/html; charset=utf-8" },
