@@ -13,12 +13,12 @@ vi.mock("@tanstack/react-router", () => ({
 
 const getAttemptResult = vi.fn();
 vi.mock("@/features/results/services/result-service", () => ({
-  getAttemptResult: (...args: unknown[]) => getAttemptResult(...args),
+  getAttemptResult: (attemptId: string) => getAttemptResult(attemptId),
 }));
 
 const notifyResultAvailable = vi.fn(() => Promise.resolve());
 vi.mock("@/features/billing/services/billing-service", () => ({
-  notifyResultAvailable: (...args: unknown[]) => notifyResultAvailable(...args),
+  notifyResultAvailable: (attemptId: string) => notifyResultAvailable(attemptId),
 }));
 
 vi.mock("@/features/ai/components/AiCoachPanel", () => ({
@@ -28,7 +28,7 @@ vi.mock("@/features/ai/components/AiCoachPanel", () => ({
 import { Route } from "./results.$attemptId";
 import { makeAttemptResult } from "@/test/fixtures";
 
-const ResultPage = Route.options.component as () => JSX.Element;
+const ResultPage = Route.options.component as () => React.ReactElement;
 
 describe("Results route", () => {
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe("Results route", () => {
 
   it("renders the score summary and the review link once loaded", async () => {
     getAttemptResult.mockResolvedValue(
-      makeAttemptResult({ exam_title: "Entra ID Practice", score_percent: 82, passed: true }),
+      makeAttemptResult({ exam_title: "Entra ID Practice", percentage: 82, passed: true }),
     );
 
     render(<ResultPage />);
