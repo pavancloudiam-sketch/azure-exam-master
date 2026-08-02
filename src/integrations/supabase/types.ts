@@ -400,6 +400,7 @@ export type Database = {
           marked_for_review: boolean
           question_id: string
           selected_option_ids: string[]
+          statement_responses: Json
         }
         Insert: {
           answered_at?: string
@@ -410,6 +411,7 @@ export type Database = {
           marked_for_review?: boolean
           question_id: string
           selected_option_ids?: string[]
+          statement_responses?: Json
         }
         Update: {
           answered_at?: string
@@ -420,6 +422,7 @@ export type Database = {
           marked_for_review?: boolean
           question_id?: string
           selected_option_ids?: string[]
+          statement_responses?: Json
         }
         Relationships: [
           {
