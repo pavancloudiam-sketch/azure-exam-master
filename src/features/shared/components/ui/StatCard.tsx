@@ -9,8 +9,8 @@ export function StatCard({
 }: {
   label: string;
   value: string | number;
-  hint?: string;
-  icon?: LucideIcon;
+  hint?: string | undefined;
+  icon?: LucideIcon | undefined;
 }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-card">
