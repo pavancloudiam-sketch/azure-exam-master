@@ -63,6 +63,7 @@ import { Route as AuthenticatedExamsExamIdStartRouteImport } from './routes/_aut
 import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
 import { Route as ApiPublicV1MembersRouteImport } from './routes/api/public/v1/members'
 import { Route as ApiPublicV1OrganizationRouteImport } from './routes/api/public/v1/organization'
+import { Route as ApiPublicWebhooksRazorpayRouteImport } from './routes/api/public/webhooks/razorpay'
 import { Route as AuthenticatedAdminAdminAiGeneratorRouteImport } from './routes/_authenticated/_admin/admin/ai.generator'
 
 const IndexRoute = IndexRouteImport.update({
@@ -361,6 +362,12 @@ const ApiPublicV1OrganizationRoute = ApiPublicV1OrganizationRouteImport.update({
   path: '/api/public/v1/organization',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWebhooksRazorpayRoute =
+  ApiPublicWebhooksRazorpayRouteImport.update({
+    id: '/api/public/webhooks/razorpay',
+    path: '/api/public/webhooks/razorpay',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminAdminAiGeneratorRoute =
   AuthenticatedAdminAdminAiGeneratorRouteImport.update({
     id: '/generator',
@@ -420,6 +427,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/admin/': typeof AuthenticatedAdminAdminIndexRoute
   '/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -475,6 +483,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/admin': typeof AuthenticatedAdminAdminIndexRoute
   '/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -533,6 +542,7 @@ export interface FileRoutesById {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/_authenticated/_admin/admin/': typeof AuthenticatedAdminAdminIndexRoute
   '/_authenticated/_admin/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -590,6 +600,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/admin/'
     | '/admin/ai/generator'
   fileRoutesByTo: FileRoutesByTo
@@ -645,6 +656,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/admin'
     | '/admin/ai/generator'
   id:
@@ -702,6 +714,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/_authenticated/_admin/admin/'
     | '/_authenticated/_admin/admin/ai/generator'
   fileRoutesById: FileRoutesById
@@ -726,6 +739,7 @@ export interface RootRouteChildren {
   ApiPublicHooksQueueWorkerRoute: typeof ApiPublicHooksQueueWorkerRoute
   ApiPublicV1MembersRoute: typeof ApiPublicV1MembersRoute
   ApiPublicV1OrganizationRoute: typeof ApiPublicV1OrganizationRoute
+  ApiPublicWebhooksRazorpayRoute: typeof ApiPublicWebhooksRazorpayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1108,6 +1122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrganizationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/webhooks/razorpay': {
+      id: '/api/public/webhooks/razorpay'
+      path: '/api/public/webhooks/razorpay'
+      fullPath: '/api/public/webhooks/razorpay'
+      preLoaderRoute: typeof ApiPublicWebhooksRazorpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/_admin/admin/ai/generator': {
       id: '/_authenticated/_admin/admin/ai/generator'
       path: '/generator'
@@ -1259,6 +1280,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksQueueWorkerRoute: ApiPublicHooksQueueWorkerRoute,
   ApiPublicV1MembersRoute: ApiPublicV1MembersRoute,
   ApiPublicV1OrganizationRoute: ApiPublicV1OrganizationRoute,
+  ApiPublicWebhooksRazorpayRoute: ApiPublicWebhooksRazorpayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
