@@ -238,6 +238,7 @@ export async function runQueueWorker(
 
   summary.duration_ms = Date.now() - startedAt;
   log("queue.run_completed", "Queue worker run finished", {
+    run_id: runId,
     provider: provider.name,
     emails_claimed: summary.emails.claimed,
     emails_sent: summary.emails.sent,
