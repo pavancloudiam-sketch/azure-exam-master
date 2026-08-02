@@ -33,7 +33,7 @@ export function ReportAiContentDialog({
   attemptId?: string;
   questionId?: string;
   requestId?: string;
-  feature?: "ai_coach" | "ai_interview_coach" | "ai_study_assistant" | "ai_performance_coach";
+  feature?: "ai_coach" | "ai_interview_coach" | "ai_study_assistant";
 }) {
   const [reason, setReason] = React.useState("inaccurate");
   const [note, setNote] = React.useState("");
