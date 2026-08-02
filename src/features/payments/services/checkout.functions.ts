@@ -6,9 +6,15 @@ export type UpiCheckoutSession = {
   orderId: string;
   orderNumber: string;
   status: string;
+  regularSubtotalMinor: number;
+  promotionDiscountMinor: number;
+  couponDiscountMinor: number;
+  discountMinor: number;
   subtotalMinor: number;
   taxMinor: number;
   totalMinor: number;
+  promotionName: string | null;
+  couponCode: string | null;
   expiresAt: string | null;
   qrImageUrl: string | null;
   upiLink: string | null;
@@ -21,28 +27,25 @@ const TTL_MINUTES = 15;
  * Creates (or resumes) a pending UPI order and returns the payment session.
  *
  * Nothing here grants access: the order is `pending_payment` and the
- * entitlement is only created later by the verified webhook.
+ * entitlement is only created later by the verified webhook. The payable
+ * amount — including any live promotion or coupon — is calculated by the
+ * database; the browser cannot influence it.
  */
 export const startUpiCheckout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { productId: string }) => {
+  .inputValidator((input: { productId: string; couponCode?: string }) => {
     if (!input?.productId) throw new Error("A product is required");
     return input;
   })
   .handler(async ({ data, context }): Promise<UpiCheckoutSession> => {
+    const coupon = data.couponCode?.trim();
     const { data: order, error } = await context.supabase.rpc("create_upi_order", {
       _product_id: data.productId,
       _ttl_minutes: TTL_MINUTES,
+      ...(coupon ? { _coupon_code: coupon } : {}),
     });
     if (error) throw error;
-    const created = order as unknown as {
-      id: string;
-      order_number: string;
-      status: string;
-      subtotal_minor: number;
-      tax_minor: number;
-      total_minor: number;
-    };
+    const created = order as unknown as { id: string };
 
     return buildSession(created.id, context.userId);
   });
