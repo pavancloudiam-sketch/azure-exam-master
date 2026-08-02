@@ -15,6 +15,8 @@ type RazorpayEntity = {
   error_code?: string;
   error_description?: string;
   method?: string;
+  amount?: number;
+  currency?: string;
   notes?: Record<string, string>;
 };
 
@@ -33,7 +35,15 @@ function extract(payload: Record<string, unknown>) {
   const entity = payment ?? link ?? qr;
   const orderId =
     payment?.notes?.["order_id"] ?? link?.notes?.["order_id"] ?? qr?.notes?.["order_id"] ?? null;
-  return { entity, orderId, reference: payment?.id ?? link?.id ?? qr?.id ?? null };
+  return {
+    entity,
+    orderId,
+    reference: payment?.id ?? link?.id ?? qr?.id ?? null,
+    // Amount/currency as reported by the provider. The database refuses to
+    // settle when these disagree with the server-calculated order total.
+    amountMinor: payment?.amount ?? link?.amount ?? qr?.amount ?? null,
+    currency: payment?.currency ?? link?.currency ?? qr?.currency ?? null,
+  };
 }
 
 export const Route = createFileRoute("/api/public/webhooks/razorpay")({
@@ -65,7 +75,7 @@ export const Route = createFileRoute("/api/public/webhooks/razorpay")({
         const eventId =
           request.headers.get("x-razorpay-event-id") ??
           `${eventType}:${String(payload["created_at"] ?? Date.now())}`;
-        const { entity, orderId, reference } = extract(payload);
+        const { entity, orderId, reference, amountMinor, currency } = extract(payload);
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -110,6 +120,8 @@ export const Route = createFileRoute("/api/public/webhooks/razorpay")({
               _provider_reference: reference ?? eventId,
               _method: entity?.method ?? "upi",
               _payload: trimmed,
+              ...(typeof amountMinor === "number" ? { _amount_minor: amountMinor } : {}),
+              ...(currency ? { _currency: currency } : {}),
             });
             if (error) throw error;
           } else if (eventType === "payment.failed") {

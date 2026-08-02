@@ -2048,6 +2048,7 @@ export type Database = {
       orders: {
         Row: {
           cancelled_at: string | null
+          coupon_discount_minor: number
           coupon_id: string | null
           created_at: string
           currency: string
@@ -2057,6 +2058,10 @@ export type Database = {
           order_number: string
           paid_at: string | null
           placed_at: string | null
+          price_id: string | null
+          promotion_discount_minor: number
+          promotion_id: string | null
+          regular_subtotal_minor: number
           status: string
           subtotal_minor: number
           tax_minor: number
@@ -2066,6 +2071,7 @@ export type Database = {
         }
         Insert: {
           cancelled_at?: string | null
+          coupon_discount_minor?: number
           coupon_id?: string | null
           created_at?: string
           currency?: string
@@ -2075,6 +2081,10 @@ export type Database = {
           order_number: string
           paid_at?: string | null
           placed_at?: string | null
+          price_id?: string | null
+          promotion_discount_minor?: number
+          promotion_id?: string | null
+          regular_subtotal_minor?: number
           status?: string
           subtotal_minor?: number
           tax_minor?: number
@@ -2084,6 +2094,7 @@ export type Database = {
         }
         Update: {
           cancelled_at?: string | null
+          coupon_discount_minor?: number
           coupon_id?: string | null
           created_at?: string
           currency?: string
@@ -2093,6 +2104,10 @@ export type Database = {
           order_number?: string
           paid_at?: string | null
           placed_at?: string | null
+          price_id?: string | null
+          promotion_discount_minor?: number
+          promotion_id?: string | null
+          regular_subtotal_minor?: number
           status?: string
           subtotal_minor?: number
           tax_minor?: number
@@ -2106,6 +2121,20 @@ export type Database = {
             columns: ["coupon_id"]
             isOneToOne: false
             referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_price_id_fkey"
+            columns: ["price_id"]
+            isOneToOne: false
+            referencedRelation: "prices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_promotion_id_fkey"
+            columns: ["promotion_id"]
+            isOneToOne: false
+            referencedRelation: "price_promotions"
             referencedColumns: ["id"]
           },
         ]
@@ -2776,6 +2805,71 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_promotions: {
+        Row: {
+          allow_coupon_stacking: boolean
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string | null
+          ends_at: string
+          id: string
+          is_active: boolean
+          name: string
+          priority: number
+          product_id: string
+          promo_amount_minor: number
+          starts_at: string
+          time_zone: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allow_coupon_stacking?: boolean
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          name: string
+          priority?: number
+          product_id: string
+          promo_amount_minor: number
+          starts_at: string
+          time_zone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allow_coupon_stacking?: boolean
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          priority?: number
+          product_id?: string
+          promo_amount_minor?: number
+          starts_at?: string
+          time_zone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_promotions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -3643,6 +3737,7 @@ export type Database = {
         Args: { _outcome?: string; _product_id: string; _user_id: string }
         Returns: {
           cancelled_at: string | null
+          coupon_discount_minor: number
           coupon_id: string | null
           created_at: string
           currency: string
@@ -3652,6 +3747,10 @@ export type Database = {
           order_number: string
           paid_at: string | null
           placed_at: string | null
+          price_id: string | null
+          promotion_discount_minor: number
+          promotion_id: string | null
+          regular_subtotal_minor: number
           status: string
           subtotal_minor: number
           tax_minor: number
@@ -4014,9 +4113,14 @@ export type Database = {
         Returns: Json
       }
       create_upi_order: {
-        Args: { _product_id: string; _ttl_minutes?: number }
+        Args: {
+          _coupon_code?: string
+          _product_id: string
+          _ttl_minutes?: number
+        }
         Returns: {
           cancelled_at: string | null
+          coupon_discount_minor: number
           coupon_id: string | null
           created_at: string
           currency: string
@@ -4026,6 +4130,10 @@ export type Database = {
           order_number: string
           paid_at: string | null
           placed_at: string | null
+          price_id: string | null
+          promotion_discount_minor: number
+          promotion_id: string | null
+          regular_subtotal_minor: number
           status: string
           subtotal_minor: number
           tax_minor: number
@@ -4138,6 +4246,10 @@ export type Database = {
           _payload?: Json
         }
         Returns: string
+      }
+      evaluate_purchase_price: {
+        Args: { _coupon_code?: string; _product_id: string }
+        Returns: Json
       }
       exam_is_available: { Args: { _exam_id: string }; Returns: boolean }
       exam_requires_purchase: { Args: { _exam_id: string }; Returns: boolean }
@@ -4307,7 +4419,10 @@ export type Database = {
           theme_mode: string
         }[]
       }
+      get_effective_price: { Args: { _product_id: string }; Returns: Json }
       get_exam_access_map: { Args: never; Returns: Json }
+      get_pricing_sales_summary: { Args: never; Returns: Json }
+      get_promotion_report: { Args: { _promotion_id?: string }; Returns: Json }
       get_public_certifications: {
         Args: never
         Returns: {
@@ -4327,6 +4442,7 @@ export type Database = {
           version: string
         }[]
       }
+      get_public_pricing: { Args: never; Returns: Json }
       get_question_bank_readiness: {
         Args: { _certification_id: string }
         Returns: Json
@@ -4794,7 +4910,9 @@ export type Database = {
       }
       settle_upi_payment: {
         Args: {
-          _method?: string
+          _amount_minor?: number
+          _currency?: string
+          _method: string
           _order_id: string
           _payload?: Json
           _provider_reference: string
