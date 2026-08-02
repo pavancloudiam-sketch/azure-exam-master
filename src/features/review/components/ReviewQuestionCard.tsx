@@ -165,22 +165,8 @@ export function ReviewQuestionCard({
           </ul>
         </section>
 
-        <dl className="mt-5 space-y-2 text-sm">
-          <div>
-            <dt className="font-semibold">Your answer</dt>
-            <dd className="text-muted-foreground">
-              {selected.length > 0
-                ? selected.map((option) => option.label).join(", ")
-                : "Not answered"}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">Correct answer</dt>
-            <dd className="text-muted-foreground">
-              {correct.length > 0 ? correct.map((option) => option.label).join(", ") : "Not recorded"}
-            </dd>
-          </div>
-        </dl>
+
+
 
         <dl className="mt-5 space-y-2 text-sm">
           <div>
