@@ -223,6 +223,22 @@ function CheckoutPage() {
             <h2 className="text-base font-semibold">Summary</h2>
             <dl className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
+                <dt className="text-muted-foreground">Regular price</dt>
+                <dd>{formatInr(session.data?.regularSubtotalMinor ?? 0)}</dd>
+              </div>
+              {session.data?.promotionDiscountMinor ? (
+                <div className="flex justify-between text-primary">
+                  <dt>{session.data.promotionName ?? "Offer discount"}</dt>
+                  <dd>−{formatInr(session.data.promotionDiscountMinor)}</dd>
+                </div>
+              ) : null}
+              {session.data?.couponDiscountMinor ? (
+                <div className="flex justify-between text-primary">
+                  <dt>Coupon {session.data.couponCode ?? ""}</dt>
+                  <dd>−{formatInr(session.data.couponDiscountMinor)}</dd>
+                </div>
+              ) : null}
+              <div className="flex justify-between">
                 <dt className="text-muted-foreground">Subtotal</dt>
                 <dd>{formatInr(session.data?.subtotalMinor ?? 0)}</dd>
               </div>
@@ -231,7 +247,7 @@ function CheckoutPage() {
                 <dd>{formatInr(session.data?.taxMinor ?? 0)}</dd>
               </div>
               <div className="flex justify-between border-t border-border pt-2 text-base font-semibold">
-                <dt>Total</dt>
+                <dt>Total payable</dt>
                 <dd>{formatInr(session.data?.totalMinor ?? 0)}</dd>
               </div>
             </dl>
