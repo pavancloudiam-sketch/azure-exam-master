@@ -368,10 +368,10 @@ export function BlueprintFormModal({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-sm font-semibold">Skill-area weighting</h3>
               <div className="flex flex-wrap gap-2 text-xs">
-                <StatusBadge tone={totalMin <= 100 ? "neutral" : "danger"}>
+                <StatusBadge tone={totalMin <= 100 ? "neutral" : "error"}>
                   Minimums total {totalMin}%
                 </StatusBadge>
-                <StatusBadge tone={totalMax >= 100 ? "neutral" : "danger"}>
+                <StatusBadge tone={totalMax >= 100 ? "neutral" : "error"}>
                   Maximums total {totalMax}%
                 </StatusBadge>
               </div>
@@ -457,7 +457,7 @@ export function BlueprintFormModal({
           </section>
 
           {Object.keys(errors).length > 0 ? (
-            <StatusAlert tone="danger" title="Check the highlighted fields">
+            <StatusAlert tone="error" title="Check the highlighted fields">
               Some values are outside the allowed range. Correct them and save again.
             </StatusAlert>
           ) : null}
