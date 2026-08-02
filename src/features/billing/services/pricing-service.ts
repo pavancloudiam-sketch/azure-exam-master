@@ -22,9 +22,10 @@ export async function evaluatePurchasePrice(
   productId: string,
   couponCode?: string,
 ): Promise<PurchaseQuote> {
+  const trimmed = couponCode?.trim();
   const { data, error } = await supabase.rpc("evaluate_purchase_price", {
     _product_id: productId,
-    _coupon_code: couponCode?.trim() ? couponCode.trim() : undefined,
+    ...(trimmed ? { _coupon_code: trimmed } : {}),
   });
   if (error) throw error;
   return data as unknown as PurchaseQuote;
