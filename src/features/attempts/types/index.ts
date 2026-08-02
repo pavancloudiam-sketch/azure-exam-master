@@ -39,3 +39,17 @@ export type PaletteState =
   | "unanswered"
   | "marked"
   | "answered-marked";
+/** Attempt row joined with its exam, used by the dashboard and attempts list. */
+export type AttemptWithExam = Pick<
+  Attempt,
+  | "id"
+  | "exam_id"
+  | "status"
+  | "mode"
+  | "started_at"
+  | "submitted_at"
+  | "scaled_score"
+  | "percentage"
+  | "passed"
+  | "duration_seconds"
+> & { exams: { title: string; passing_score: number } | null };

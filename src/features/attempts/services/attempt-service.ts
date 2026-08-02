@@ -146,3 +146,18 @@ export async function listMyAttempts(limit = 20): Promise<AttemptSummary[]> {
   if (error) throw error;
   return data ?? [];
 }
+/**
+ * Attempts for the signed-in student with the exam title embedded. RLS scopes
+ * the rows to the caller; this powers the dashboard and My attempts page.
+ */
+export async function listMyAttemptsDetailed(limit = 100): Promise<AttemptWithExam[]> {
+  const { data, error } = await supabase
+    .from("attempts")
+    .select(
+      "id, exam_id, status, mode, started_at, submitted_at, scaled_score, percentage, passed, duration_seconds, exams(title, passing_score)",
+    )
+    .order("started_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []) as unknown as AttemptWithExam[];
+}
