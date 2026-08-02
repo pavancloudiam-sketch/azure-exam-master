@@ -862,10 +862,14 @@ export type Database = {
           attempts: number
           body: string
           created_at: string
+          dead_lettered_at: string | null
           exam_id: string | null
           id: string
           idempotency_key: string
           last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
           order_id: string | null
           refund_id: string | null
           scheduled_for: string
@@ -882,10 +886,14 @@ export type Database = {
           attempts?: number
           body: string
           created_at?: string
+          dead_lettered_at?: string | null
           exam_id?: string | null
           id?: string
           idempotency_key: string
           last_error?: string | null
+          locked_at?: string | null
+          max_attempts?: number
+          next_attempt_at?: string
           order_id?: string | null
           refund_id?: string | null
           scheduled_for?: string
@@ -902,10 +910,14 @@ export type Database = {
           attempts?: number
           body?: string
           created_at?: string
+          dead_lettered_at?: string | null
           exam_id?: string | null
           id?: string
           idempotency_key?: string
           last_error?: string | null
+          locked_at?: string | null
+          max_attempts?: number
+          next_attempt_at?: string
           order_id?: string | null
           refund_id?: string | null
           scheduled_for?: string
@@ -2801,10 +2813,14 @@ export type Database = {
         Row: {
           attempts: number
           created_at: string
+          dead_lettered_at: string | null
           delivered_at: string | null
           event_id: string
           id: string
           last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
           organization_id: string
           response_status: number | null
           signature: string | null
@@ -2815,10 +2831,14 @@ export type Database = {
         Insert: {
           attempts?: number
           created_at?: string
+          dead_lettered_at?: string | null
           delivered_at?: string | null
           event_id: string
           id?: string
           last_error?: string | null
+          locked_at?: string | null
+          max_attempts?: number
+          next_attempt_at?: string
           organization_id: string
           response_status?: number | null
           signature?: string | null
@@ -2829,10 +2849,14 @@ export type Database = {
         Update: {
           attempts?: number
           created_at?: string
+          dead_lettered_at?: string | null
           delivered_at?: string | null
           event_id?: string
           id?: string
           last_error?: string | null
+          locked_at?: string | null
+          max_attempts?: number
+          next_attempt_at?: string
           organization_id?: string
           response_status?: number | null
           signature?: string | null
@@ -3096,7 +3120,122 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_email_jobs: {
+        Args: { _lease_seconds?: number; _limit?: number }
+        Returns: {
+          attempt_id: string | null
+          attempts: number
+          body: string
+          created_at: string
+          dead_lettered_at: string | null
+          exam_id: string | null
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
+          order_id: string | null
+          refund_id: string | null
+          scheduled_for: string
+          sent_at: string | null
+          status: string
+          subject: string
+          template: string
+          to_email: string
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "email_notifications"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      claim_webhook_jobs: {
+        Args: { _lease_seconds?: number; _limit?: number }
+        Returns: {
+          attempts: number
+          delivery_id: string
+          event_created_at: string
+          event_id: string
+          event_type: string
+          idempotency_key: string
+          max_attempts: number
+          organization_id: string
+          payload: Json
+          secret: string
+          target_url: string
+          webhook_id: string
+        }[]
+      }
       commit_import_batch: { Args: { _batch_id: string }; Returns: Json }
+      complete_email_job: {
+        Args: { _error?: string; _id: string }
+        Returns: {
+          attempt_id: string | null
+          attempts: number
+          body: string
+          created_at: string
+          dead_lettered_at: string | null
+          exam_id: string | null
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
+          order_id: string | null
+          refund_id: string | null
+          scheduled_for: string
+          sent_at: string | null
+          status: string
+          subject: string
+          template: string
+          to_email: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_notifications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      complete_webhook_job: {
+        Args: {
+          _delivery_id: string
+          _error?: string
+          _response_status?: number
+          _signature?: string
+        }
+        Returns: {
+          attempts: number
+          created_at: string
+          dead_lettered_at: string | null
+          delivered_at: string | null
+          event_id: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
+          organization_id: string
+          response_status: number | null
+          signature: string | null
+          status: string
+          updated_at: string
+          webhook_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "webhook_deliveries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_certification_version: {
         Args: {
           _clone_taxonomy?: boolean
@@ -3437,6 +3576,7 @@ export type Database = {
           usage_count: number
         }[]
       }
+      get_queue_health: { Args: never; Returns: Json }
       grant_admin_role: { Args: { _email: string }; Returns: string }
       has_exam_access: {
         Args: { _exam_id: string; _user_id: string }
@@ -3527,10 +3667,14 @@ export type Database = {
           attempts: number
           body: string
           created_at: string
+          dead_lettered_at: string | null
           exam_id: string | null
           id: string
           idempotency_key: string
           last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
           order_id: string | null
           refund_id: string | null
           scheduled_for: string
@@ -3707,6 +3851,66 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "subscriptions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      requeue_email_job: {
+        Args: { _id: string }
+        Returns: {
+          attempt_id: string | null
+          attempts: number
+          body: string
+          created_at: string
+          dead_lettered_at: string | null
+          exam_id: string | null
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
+          order_id: string | null
+          refund_id: string | null
+          scheduled_for: string
+          sent_at: string | null
+          status: string
+          subject: string
+          template: string
+          to_email: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_notifications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      requeue_webhook_job: {
+        Args: { _id: string }
+        Returns: {
+          attempts: number
+          created_at: string
+          dead_lettered_at: string | null
+          delivered_at: string | null
+          event_id: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          max_attempts: number
+          next_attempt_at: string
+          organization_id: string
+          response_status: number | null
+          signature: string | null
+          status: string
+          updated_at: string
+          webhook_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "webhook_deliveries"
           isOneToOne: true
           isSetofReturn: false
         }
