@@ -167,6 +167,21 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
     else summary.webhooks.retried += 1;
   }
 
+  // --------------------------------------------------------------- alerts
+  const deadLettered = summary.emails.deadLettered + summary.webhooks.deadLettered;
+  if (deadLettered >= deadLetterAlertThreshold()) {
+    await raiseOpsAlert({
+      code: "queue.jobs_dead_lettered",
+      message: "Queue jobs exhausted their retries and were dead-lettered",
+      correlationId: runId,
+      context: {
+        emails_dead_lettered: summary.emails.deadLettered,
+        webhooks_dead_lettered: summary.webhooks.deadLettered,
+        threshold: deadLetterAlertThreshold(),
+      },
+    });
+  }
+
   // ------------------------------------------------------------- retention
   // No second scheduler: the existing per-minute cron tick asks the database to
   // run the nightly retention routine, which itself no-ops unless the last
@@ -178,23 +193,39 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
       { _force: false },
     );
     if (retentionError) throw retentionError;
-    const result = (retention ?? {}) as { status?: string; report?: Record<string, unknown> };
+    const result = (retention ?? {}) as {
+      status?: string;
+      report?: Record<string, unknown>;
+      error?: string;
+    };
     summary.retention.status = result.status ?? "unknown";
     if (result.status === "completed") {
       log("retention.run_completed", "Nightly retention run finished", result.report ?? {});
+      const errors = (result.report?.["errors"] as unknown[] | undefined) ?? [];
+      if (errors.length > 0) {
+        await raiseOpsAlert({
+          code: "retention.run_failed",
+          message: "Nightly retention run completed with step failures",
+          correlationId: runId,
+          context: { failed_steps: errors.length },
+        });
+      }
+    } else if (result.status === "failed") {
+      await raiseOpsAlert({
+        code: "retention.run_failed",
+        message: "Nightly retention run failed",
+        correlationId: runId,
+        context: { status: result.status },
+      });
     }
   } catch (cause) {
     summary.retention.status = "error";
-    console.error(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        severity: "error",
-        code: "retention.run_failed",
-        message: "Nightly retention run failed",
-        source: "server",
-        context: { error_name: (cause as Error)?.name ?? "Error" },
-      }),
-    );
+    await raiseOpsAlert({
+      code: "retention.run_failed",
+      message: "Nightly retention run failed",
+      correlationId: runId,
+      cause,
+    });
   }
 
   summary.duration_ms = Date.now() - startedAt;
