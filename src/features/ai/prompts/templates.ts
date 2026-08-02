@@ -174,6 +174,7 @@ Exactly one follow-up question at the chosen difficulty and style. Do not answer
 export const STUDY_ACTIONS = [
   "review_mistakes",
   "weak_domains",
+  "progress_report",
   "study_plan",
   "next_topics",
   "ask",
@@ -184,10 +185,12 @@ export type StudyAction = (typeof STUDY_ACTIONS)[number];
 export const STUDY_ACTION_LABELS: Record<StudyAction, string> = {
   review_mistakes: "Explain my incorrect answers",
   weak_domains: "Where am I weakest?",
+  progress_report: "How am I progressing?",
   study_plan: "Build me a study plan",
   next_topics: "What should I study next?",
   ask: "Ask a study question",
 };
+
 
 const STUDY_SCOPE_RULES = [
   "Scope: Microsoft Entra ID, identity and access management, and how to study for the related certifications, plus this student's own submitted practice results.",
