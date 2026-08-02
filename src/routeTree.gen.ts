@@ -36,6 +36,7 @@ import { Route as LegalDocSlugRouteImport } from './routes/legal/$docSlug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
+import { Route as AuthenticatedCheckoutOrderIdRouteImport } from './routes/_authenticated/checkout.$orderId'
 import { Route as AuthenticatedOrganizationBrandingRouteImport } from './routes/_authenticated/organization.branding'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
@@ -202,6 +203,12 @@ const AuthenticatedAttemptAttemptIdRoute =
   AuthenticatedAttemptAttemptIdRouteImport.update({
     id: '/attempt/$attemptId',
     path: '/attempt/$attemptId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCheckoutOrderIdRoute =
+  AuthenticatedCheckoutOrderIdRouteImport.update({
+    id: '/checkout/$orderId',
+    path: '/checkout/$orderId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOrganizationBrandingRoute =
@@ -401,6 +408,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -457,6 +465,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -516,6 +525,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/_authenticated/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/_authenticated/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/attempt/$attemptId'
+    | '/checkout/$orderId'
     | '/organization/branding'
     | '/results/$attemptId'
     | '/review/$attemptId'
@@ -630,6 +641,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/attempt/$attemptId'
+    | '/checkout/$orderId'
     | '/organization/branding'
     | '/results/$attemptId'
     | '/review/$attemptId'
@@ -688,6 +700,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/attempt/$attemptId'
+    | '/_authenticated/checkout/$orderId'
     | '/_authenticated/organization/branding'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/review/$attemptId'
@@ -931,6 +944,13 @@ declare module '@tanstack/react-router' {
       path: '/attempt/$attemptId'
       fullPath: '/attempt/$attemptId'
       preLoaderRoute: typeof AuthenticatedAttemptAttemptIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/checkout/$orderId': {
+      id: '/_authenticated/checkout/$orderId'
+      path: '/checkout/$orderId'
+      fullPath: '/checkout/$orderId'
+      preLoaderRoute: typeof AuthenticatedCheckoutOrderIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/organization/branding': {
@@ -1232,6 +1252,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedStudyRoute: typeof AuthenticatedStudyRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
+  AuthenticatedCheckoutOrderIdRoute: typeof AuthenticatedCheckoutOrderIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedReviewAttemptIdRoute: typeof AuthenticatedReviewAttemptIdRoute
   AuthenticatedExamsExamIdStartRoute: typeof AuthenticatedExamsExamIdStartRoute
@@ -1251,6 +1272,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedStudyRoute: AuthenticatedStudyRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
+  AuthenticatedCheckoutOrderIdRoute: AuthenticatedCheckoutOrderIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedReviewAttemptIdRoute: AuthenticatedReviewAttemptIdRoute,
   AuthenticatedExamsExamIdStartRoute: AuthenticatedExamsExamIdStartRoute,
