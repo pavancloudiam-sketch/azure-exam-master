@@ -43,6 +43,7 @@ import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin/index'
 import { Route as AuthenticatedAdminAdminAiRouteImport } from './routes/_authenticated/_admin/admin/ai'
+import { Route as AuthenticatedAdminAdminAuditRouteImport } from './routes/_authenticated/_admin/admin/audit'
 import { Route as AuthenticatedAdminAdminBillingRouteImport } from './routes/_authenticated/_admin/admin/billing'
 import { Route as AuthenticatedAdminAdminCertificationsRouteImport } from './routes/_authenticated/_admin/admin/certifications'
 import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin/documents'
@@ -238,6 +239,12 @@ const AuthenticatedAdminAdminAiRoute =
     path: '/admin/ai',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminAuditRoute =
+  AuthenticatedAdminAdminAuditRouteImport.update({
+    id: '/admin/audit',
+    path: '/admin/audit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminBillingRoute =
   AuthenticatedAdminAdminBillingRouteImport.update({
     id: '/admin/billing',
@@ -365,6 +372,7 @@ export interface FileRoutesByFullPath {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -415,6 +423,7 @@ export interface FileRoutesByTo {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -468,6 +477,7 @@ export interface FileRoutesById {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/_authenticated/_admin/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/_authenticated/_admin/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/_authenticated/_admin/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/_authenticated/_admin/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -520,6 +530,7 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/admin/ai'
+    | '/admin/audit'
     | '/admin/billing'
     | '/admin/certifications'
     | '/admin/documents'
@@ -570,6 +581,7 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/admin/ai'
+    | '/admin/audit'
     | '/admin/billing'
     | '/admin/certifications'
     | '/admin/documents'
@@ -622,6 +634,7 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/_authenticated/_admin/admin/ai'
+    | '/_authenticated/_admin/admin/audit'
     | '/_authenticated/_admin/admin/billing'
     | '/_authenticated/_admin/admin/certifications'
     | '/_authenticated/_admin/admin/documents'
@@ -903,6 +916,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminAiRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/audit': {
+      id: '/_authenticated/_admin/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/billing': {
       id: '/_authenticated/_admin/admin/billing'
       path: '/admin/billing'
@@ -1035,6 +1055,7 @@ const AuthenticatedAdminAdminAiRouteWithChildren =
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminAiRoute: typeof AuthenticatedAdminAdminAiRouteWithChildren
+  AuthenticatedAdminAdminAuditRoute: typeof AuthenticatedAdminAdminAuditRoute
   AuthenticatedAdminAdminBillingRoute: typeof AuthenticatedAdminAdminBillingRoute
   AuthenticatedAdminAdminCertificationsRoute: typeof AuthenticatedAdminAdminCertificationsRoute
   AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
@@ -1052,6 +1073,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminAiRoute: AuthenticatedAdminAdminAiRouteWithChildren,
+  AuthenticatedAdminAdminAuditRoute: AuthenticatedAdminAdminAuditRoute,
   AuthenticatedAdminAdminBillingRoute: AuthenticatedAdminAdminBillingRoute,
   AuthenticatedAdminAdminCertificationsRoute:
     AuthenticatedAdminAdminCertificationsRoute,
