@@ -84,7 +84,7 @@ function Index() {
                 Start practising free
               </Link>
               <Link
-                to="/certifications"
+                to="/certifications" search={{}}
                 className="inline-flex min-h-11 items-center rounded-md border border-border bg-background px-6 text-sm font-medium text-primary transition-colors hover:bg-muted"
               >
                 Browse certifications
