@@ -66,6 +66,9 @@ export const adminNav: NavItem[] = [
   { to: "/admin/domains", label: "Domains", icon: Layers },
   { to: "/admin/topics", label: "Topics", icon: ListTree },
   { to: "/admin/exams", label: "Exams", icon: ClipboardList },
+  { to: "/admin/blueprints", label: "Blueprints", icon: Ruler },
+  { to: "/admin/readiness", label: "Question-bank readiness", icon: Gauge },
+
   { to: "/admin/questions", label: "Questions", icon: FileQuestion },
   { to: "/admin/import", label: "Bulk import", icon: Upload },
   { to: "/admin/documents", label: "Documents", icon: FileText },
