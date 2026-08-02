@@ -21,11 +21,13 @@ function renderDashboard() {
   return render(<Component />);
 }
 
-function meta() {
-  const head = (Route as unknown as { options: { head: () => { meta: Record<string, string>[] } } })
-    .options.head;
+type MetaTag = { title?: string; name?: string; property?: string; content?: string };
+
+function meta(): MetaTag[] {
+  const head = (Route as unknown as { options: { head: () => { meta: MetaTag[] } } }).options.head;
   return head().meta;
 }
+
 
 describe("Dashboard route", () => {
   it("renders the page shell, the signed-in identity and the attempts section", () => {
