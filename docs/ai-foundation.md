@@ -65,10 +65,18 @@ hiding UI is a convenience, not the control.
 `ai_quota_exhausted`). Provider errors are logged server-side with a request id
 and surfaced to users as plain guidance, never as raw provider text.
 
-## Not built yet
+## Modules that were folded in or dropped
 
-Study Assistant, Performance Coach, Interview Coach and the Admin Question
-Generator.
+**AI Performance Coach — removed.** It never had a server function, context
+builder or UI; only a disabled flag, a rate-limit entry and a prompt template.
+Everything it described (per-domain accuracy, weak areas, a learning sequence,
+small-sample honesty) is already produced by the Study Assistant from the same
+`buildStudyContext` data. Keeping it would have meant a second module reading
+identical data behind a second budget and a second admin switch. Its one unique
+angle — score trend across submitted attempts — is now the Study Assistant
+`progress_report` action, fed by `StudyContext.attemptTrend`. The
+`ai_performance_coach` flag row, feature key and rate-limit entry are gone.
+
 
 ## Module: AskMe AI Coach (Prompt 28)
 

@@ -25,9 +25,11 @@ type Turn = { role: "user" | "assistant"; content: string; requestId?: string };
 const QUICK_ACTIONS: StudyAction[] = [
   "review_mistakes",
   "weak_domains",
+  "progress_report",
   "study_plan",
   "next_topics",
 ];
+
 
 function readError(cause: unknown): string {
   const raw = cause instanceof Error ? cause.message : "";

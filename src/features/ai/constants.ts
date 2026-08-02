@@ -2,7 +2,6 @@
 export const AI_FEATURES = [
   "ai_coach",
   "ai_study_assistant",
-  "ai_performance_coach",
   "ai_interview_coach",
   "ai_question_generator",
 ] as const;
@@ -15,14 +14,17 @@ export const ADMIN_ONLY_FEATURES: readonly AiFeature[] = ["ai_question_generator
 /**
  * Per-user request budgets. Enforced server-side against ai_usage_logs, so a
  * client cannot bypass them by calling the server function directly.
+ *
+ * Performance coaching is part of the Study Assistant budget — it is an action
+ * inside that module, not a module of its own.
  */
 export const AI_RATE_LIMITS: Record<AiFeature, { perHour: number; perDay: number }> = {
   ai_coach: { perHour: 40, perDay: 150 },
   ai_study_assistant: { perHour: 40, perDay: 150 },
-  ai_performance_coach: { perHour: 15, perDay: 60 },
   ai_interview_coach: { perHour: 40, perDay: 150 },
   ai_question_generator: { perHour: 30, perDay: 120 },
 };
+
 
 /** Conversation ceiling shared by every conversational AI module. */
 export const AI_CONVERSATION_LIMITS = {

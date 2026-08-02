@@ -43,7 +43,9 @@ function Index() {
           </Link>
           <Link
             to="/certifications"
+            search={{}}
             className="rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-muted"
+          
           >
             Browse certifications
           </Link>

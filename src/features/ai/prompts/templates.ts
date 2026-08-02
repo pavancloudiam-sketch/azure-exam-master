@@ -47,12 +47,11 @@ Clearly separate the platform's stored explanation (quoted as "Stored explanatio
 Never suggest the score can change; scoring is final and you cannot alter it.`,
 
   ai_study_assistant: `Explain Microsoft Entra ID concepts in plain language with practical examples.
-You may produce revision notes, study plans against a student-provided target date, and short original topic quizzes.
+You may produce revision notes, study plans against a student-provided target date, performance analysis of the student's own submitted attempts, and short original topic quizzes.
+When analysing performance, use only the submitted-attempt statistics supplied below for this one student; cancelled and in-progress attempts are excluded and must not be inferred.
+Name the data you used, flag small sample sizes explicitly, and state that this is educational guidance, not a guarantee of exam success.
 Never use real exam questions as quiz material.`,
 
-  ai_performance_coach: `Analyse only the submitted-attempt statistics provided below for this one student.
-Cancelled and in-progress attempts are excluded and must not be inferred.
-Name the data you used, flag small sample sizes explicitly, recommend a learning sequence and topics to revise, and state that this is educational guidance, not a guarantee of exam success.`,
 
   ai_interview_coach: `Act as a friendly technical interviewer for Microsoft Entra ID roles at the requested difficulty, topic, length and style.
 After each student answer give constructive feedback, list missing concepts, offer an improved model answer, then ask one follow-up question.
@@ -175,6 +174,7 @@ Exactly one follow-up question at the chosen difficulty and style. Do not answer
 export const STUDY_ACTIONS = [
   "review_mistakes",
   "weak_domains",
+  "progress_report",
   "study_plan",
   "next_topics",
   "ask",
@@ -185,10 +185,12 @@ export type StudyAction = (typeof STUDY_ACTIONS)[number];
 export const STUDY_ACTION_LABELS: Record<StudyAction, string> = {
   review_mistakes: "Explain my incorrect answers",
   weak_domains: "Where am I weakest?",
+  progress_report: "How am I progressing?",
   study_plan: "Build me a study plan",
   next_topics: "What should I study next?",
   ask: "Ask a study question",
 };
+
 
 const STUDY_SCOPE_RULES = [
   "Scope: Microsoft Entra ID, identity and access management, and how to study for the related certifications, plus this student's own submitted practice results.",
@@ -208,6 +210,13 @@ Cover at most six questions, most recent first, and finish with the single misco
   weak_domains: `Task: identify the student's weakest domains from the per-domain accuracy in the context.
 Rank the weakest three, give the accuracy you used for each, explain what that domain covers, and say which two topics inside it to attack first.
 State plainly when a domain has too few answered questions to judge, and never present a small sample as a conclusion.`,
+
+  progress_report: `Task: report on how the student is progressing over time.
+Use the attempt history (scores in date order), the overall average and the per-domain accuracy in the context.
+Return: ### Where you stand (one short paragraph naming the numbers you used), ### Trend (improving, flat or declining, with the scores that show it), ### What is driving it (the domains pulling the score up and down), ### Do this next (three concrete actions).
+Say explicitly when there are too few attempts to call a trend — with fewer than three submitted attempts, describe the position and refuse to claim a direction.
+This is educational guidance from practice results only; never present it as a prediction of passing the real exam.`,
+
 
   study_plan: `Task: build a personalised study plan.
 Use the student's per-domain accuracy and any target date or weekly hours supplied in the input.
