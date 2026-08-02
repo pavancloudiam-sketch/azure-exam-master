@@ -113,7 +113,7 @@ describe("Review route", () => {
 
   it("shows a loading state while the review loads", () => {
     renderReview({ loading: true, visible: [], current: null });
-    expect(screen.getByText(/Loading/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Loading your review/).length).toBeGreaterThan(0);
   });
 
   it("shows an error state when the review cannot be loaded", () => {
