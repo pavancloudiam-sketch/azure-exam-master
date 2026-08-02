@@ -67,7 +67,9 @@ async function buildSession(orderId: string, userId: string): Promise<UpiCheckou
 
   const { data: order, error } = await supabaseAdmin
     .from("orders")
-    .select("id, user_id, order_number, status, subtotal_minor, tax_minor, total_minor")
+    .select(
+      "id, user_id, order_number, status, subtotal_minor, discount_minor, tax_minor, total_minor, regular_subtotal_minor, promotion_discount_minor, coupon_discount_minor, price_promotions(name), coupons(code)",
+    )
     .eq("id", orderId)
     .maybeSingle();
   if (error) throw error;
@@ -82,13 +84,21 @@ async function buildSession(orderId: string, userId: string): Promise<UpiCheckou
     .maybeSingle();
 
   const metadata = (attempt?.metadata ?? {}) as Record<string, unknown>;
+  const promotion = order.price_promotions as { name: string } | null;
+  const coupon = order.coupons as { code: string } | null;
   const base: UpiCheckoutSession = {
     orderId: order.id,
     orderNumber: order.order_number,
     status: order.status,
+    regularSubtotalMinor: order.regular_subtotal_minor,
+    promotionDiscountMinor: order.promotion_discount_minor,
+    couponDiscountMinor: order.coupon_discount_minor,
+    discountMinor: order.discount_minor,
     subtotalMinor: order.subtotal_minor,
     taxMinor: order.tax_minor,
     totalMinor: order.total_minor,
+    promotionName: promotion?.name ?? null,
+    couponCode: coupon?.code ?? null,
     expiresAt: attempt?.expires_at ?? null,
     qrImageUrl: (metadata["qr_image_url"] as string | undefined) ?? null,
     upiLink: (metadata["upi_link"] as string | undefined) ?? null,
