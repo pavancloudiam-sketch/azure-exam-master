@@ -70,6 +70,10 @@ export async function buildStudyContext(
       percentages.length > 0
         ? Math.round(percentages.reduce((sum, value) => sum + value, 0) / percentages.length)
         : null,
+    attemptTrend: (attempts ?? [])
+      .map((row) => ({ submittedAt: row.submitted_at, percentage: row.percentage }))
+      .reverse(),
+
     domains: [],
     topics: [],
     mistakes: [],
