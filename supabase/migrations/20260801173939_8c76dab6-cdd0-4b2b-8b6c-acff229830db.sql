@@ -1,0 +1,1 @@
+GRANT SELECT (tags, governance_status, is_archived, review_flag, import_batch_id) ON public.questions TO authenticated;

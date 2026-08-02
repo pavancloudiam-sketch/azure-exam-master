@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://weyyjirtvrajxrehoiii.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "entra-path",
+      "version": "0.1.0",
+      "title": "Entra Path"
+    },
+    "tools": [
+      {
+        "name": "list_certifications",
+        "title": "List certifications",
+        "description": "List the Microsoft Entra ID certifications available to practise on AskMeExam, with their exam code, version and lifecycle status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "type": "string",
+              "description": "Optional text to match against the certification name or exam code."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_exams",
+        "title": "List practice exams",
+        "description": "List published AskMeExam practice exams, optionally filtered to one certification, including question count, time limit and passing score.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "certification_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "Optional certification id from list_certifications."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_attempts",
+        "title": "List my exam attempts",
+        "description": "List the signed-in student's own exam attempts, newest first, with mode, status, score and pass/fail outcome.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "in_progress",
+                "submitted",
+                "cancelled",
+                "expired"
+              ],
+              "description": "Optional attempt status filter."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "How many attempts to return (1-50, default 20)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_attempt_result",
+        "title": "Get attempt result",
+        "description": "Get the scored result of one of the signed-in student's submitted attempts, including the scaled score, pass mark and per-domain breakdown. Live answer keys are never returned.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "attempt_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "Attempt id from list_my_attempts."
+            }
+          },
+          "required": [
+            "attempt_id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

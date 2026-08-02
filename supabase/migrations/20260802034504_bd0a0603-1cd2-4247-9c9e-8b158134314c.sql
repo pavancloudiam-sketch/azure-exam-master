@@ -1,0 +1,1 @@
+delete from public.user_roles r using public.profiles p where r.user_id = p.id and p.email = 'tenant-a-owner@askmeexam.test' and r.role = 'admin';

@@ -1,0 +1,1 @@
+GRANT DELETE ON public.question_options TO authenticated;
