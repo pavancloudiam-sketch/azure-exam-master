@@ -2,12 +2,21 @@ import * as React from "react";
 
 import {
   getAttempt,
+  getAttemptCaseStudies,
   getAttemptQuestions,
   listAttemptAnswers,
   saveAnswer,
   submitAttempt,
 } from "../services/attempt-service";
-import type { AnswerState, Attempt, ExamQuestionView, PaletteState } from "../types";
+import {
+  isQuestionAnswered,
+  type AnswerState,
+  type Attempt,
+  type AttemptCaseStudy,
+  type ExamQuestionView,
+  type PaletteState,
+  type StatementResponse,
+} from "../types";
 import {
   describeError,
   errorToastMessage,
@@ -56,6 +65,7 @@ function isMulti(type: string) {
 export function useExamEngine(attemptId: string) {
   const [attempt, setAttempt] = React.useState<Attempt | null>(null);
   const [questions, setQuestions] = React.useState<ExamQuestionView[]>([]);
+  const [caseStudies, setCaseStudies] = React.useState<AttemptCaseStudy[]>([]);
   const [answers, setAnswers] = React.useState<Record<string, AnswerState>>({});
   const answersRef = React.useRef<Record<string, AnswerState>>({});
   const [index, setIndex] = React.useState(0);
@@ -84,6 +94,7 @@ export function useExamEngine(attemptId: string) {
           questionId: item.questionId,
           selected: item.selected,
           markedForReview: item.markedForReview,
+          ...(item.statementResponses ? { statementResponses: item.statementResponses } : {}),
         }).catch((cause) => {
           logError("attempt.autosave_failed", "Answer autosave failed", cause, {
             attempt_id: attemptId,
@@ -116,10 +127,11 @@ export function useExamEngine(attemptId: string) {
     setLoading(true);
     (async () => {
       try {
-        const [attemptRow, questionRows, answerRows] = await Promise.all([
+        const [attemptRow, questionRows, answerRows, caseStudyRows] = await Promise.all([
           getAttempt(attemptId),
           getAttemptQuestions(attemptId),
           listAttemptAnswers(attemptId),
+          getAttemptCaseStudies(attemptId).catch(() => [] as AttemptCaseStudy[]),
         ]);
         if (!active) return;
         if (!attemptRow) {
@@ -131,6 +143,8 @@ export function useExamEngine(attemptId: string) {
           map[row.question_id] = {
             selected: row.selected_option_ids ?? [],
             markedForReview: row.marked_for_review,
+            statementResponses:
+              (row.statement_responses as Record<string, StatementResponse> | null) ?? {},
           };
         }
         // Replay locally queued edits over the server state so a refresh or
@@ -142,10 +156,14 @@ export function useExamEngine(attemptId: string) {
           map[item.questionId] = {
             selected: item.selected,
             markedForReview: item.markedForReview,
+            ...(item.statementResponses
+              ? { statementResponses: item.statementResponses }
+              : {}),
           };
         }
         setAttempt(attemptRow);
         setQuestions(questionRows);
+        setCaseStudies(caseStudyRows);
         answersRef.current = map;
         setAnswers(map);
       } catch (cause) {
@@ -167,6 +185,7 @@ export function useExamEngine(attemptId: string) {
       questionId,
       selected: next.selected,
       markedForReview: next.markedForReview,
+      ...(next.statementResponses ? { statementResponses: next.statementResponses } : {}),
     });
   }, []);
 
@@ -199,8 +218,34 @@ export function useExamEngine(attemptId: string) {
     [update],
   );
 
+  /**
+   * Yes/No items: the server grades the statements answered "Yes", so a "Yes"
+   * adds the statement id to `selected` and a "No" removes it. The explicit
+   * Yes/No is kept alongside so "answered No" is never confused with "blank".
+   */
+  const setStatement = React.useCallback(
+    (question: ExamQuestionView, statementId: string, value: StatementResponse) => {
+      update(question.question_id, (current) => {
+        const responses = { ...(current.statementResponses ?? {}), [statementId]: value };
+        const selected =
+          value === "yes"
+            ? current.selected.includes(statementId)
+              ? current.selected
+              : [...current.selected, statementId]
+            : current.selected.filter((id) => id !== statementId);
+        return { ...current, selected, statementResponses: responses };
+      });
+    },
+    [update],
+  );
+
   const clearAnswer = React.useCallback(
-    (questionId: string) => update(questionId, (current) => ({ ...current, selected: [] })),
+    (questionId: string) =>
+      update(questionId, (current) => ({
+        ...current,
+        selected: [],
+        statementResponses: {},
+      })),
     [update],
   );
 
@@ -288,7 +333,7 @@ export function useExamEngine(attemptId: string) {
     () =>
       questions.map((question, position) => {
         const state = answers[question.question_id];
-        const answered = (state?.selected.length ?? 0) > 0;
+        const answered = isQuestionAnswered(question, state);
         const marked = state?.markedForReview ?? false;
         if (position === index) return "current";
         if (answered && marked) return "answered-marked";
@@ -300,7 +345,7 @@ export function useExamEngine(attemptId: string) {
 
   const answeredCount = React.useMemo(
     () =>
-      questions.filter((question) => (answers[question.question_id]?.selected.length ?? 0) > 0)
+      questions.filter((question) => isQuestionAnswered(question, answers[question.question_id]))
         .length,
     [answers, questions],
   );
@@ -312,9 +357,17 @@ export function useExamEngine(attemptId: string) {
 
   const unansweredCount = questions.length - answeredCount;
 
+  const currentQuestion = questions[index] ?? null;
+  const currentCaseStudy = React.useMemo(() => {
+    if (!currentQuestion?.case_study_id) return null;
+    return caseStudies.find((study) => study.id === currentQuestion.case_study_id) ?? null;
+  }, [caseStudies, currentQuestion]);
+
   return {
     attempt,
     questions,
+    caseStudies,
+    currentCaseStudy,
     answers,
     index,
     current: questions[index] ?? null,
@@ -335,6 +388,7 @@ export function useExamEngine(attemptId: string) {
     next: () => goTo(index + 1),
     previous: () => goTo(index - 1),
     selectOption,
+    setStatement,
     clearAnswer,
     toggleMark,
     submit,

@@ -3,6 +3,7 @@ import { REVIEW_STATUS_LABELS, type ReviewQuestion } from "../types";
 
 const statusStyles: Record<string, string> = {
   correct: "border-success/40 bg-success/10 text-foreground",
+  partial: "border-warning bg-warning/15 text-foreground",
   incorrect: "border-destructive/50 bg-destructive/10 text-foreground",
   unanswered: "border-border bg-background text-muted-foreground",
 };
@@ -49,9 +50,11 @@ export function ReviewPalette({
                 <span aria-hidden="true" className="text-[10px] leading-none">
                   {question.status === "correct"
                     ? "C"
-                    : question.status === "incorrect"
-                      ? "X"
-                      : "–"}
+                    : question.status === "partial"
+                      ? "P"
+                      : question.status === "incorrect"
+                        ? "X"
+                        : "–"}
                   {question.marked_for_review ? "\u2022" : ""}
                 </span>
               </button>
@@ -61,6 +64,7 @@ export function ReviewPalette({
       </ul>
       <ul className="mt-4 space-y-1 text-xs text-muted-foreground">
         <li>C — correct</li>
+        <li>P — partially correct</li>
         <li>X — incorrect</li>
         <li>– — unanswered</li>
         <li>• — marked for review</li>

@@ -21,11 +21,13 @@ import {
 } from "@/features/shared/components/ui";
 import { Modal } from "@/features/shared/components/ui";
 import { useExamEngine } from "../hooks/use-exam-engine";
+import { CaseStudyPanel } from "./CaseStudyPanel";
 import { cancelAttempt } from "../services/attempt-service";
 import { ExamTimer } from "./ExamTimer";
 import { QuestionPalette } from "./QuestionPalette";
 import { QuestionView } from "./QuestionView";
 import { SubmitReviewDialog } from "./SubmitReviewDialog";
+import { isQuestionAnswered } from "../types";
 
 export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTitle: string }) {
   const engine = useExamEngine(attemptId);
@@ -42,6 +44,7 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
     next,
     previous,
     selectOption,
+    setStatement,
     clearAnswer,
     toggleMark,
     submit,
@@ -89,7 +92,7 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
         toggleMark(current.question_id);
       } else if (event.key.toLowerCase() === "c") {
         clearAnswer(current.question_id);
-      } else if (/^[1-9]$/.test(event.key)) {
+      } else if (/^[1-9]$/.test(event.key) && current.question_type !== "yes_no") {
         const option = current.options[Number(event.key) - 1];
         if (option) selectOption(current, option.id);
       }
@@ -117,8 +120,14 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
   }
 
   const answer = answers[current.question_id] ?? { selected: [], markedForReview: false };
+  const caseStudy = engine.currentCaseStudy;
+  const caseStudyQuestionNumbers = caseStudy
+    ? questions
+        .map((question, position) => (question.case_study_id === caseStudy.id ? position + 1 : 0))
+        .filter((value) => value > 0)
+    : [];
   const timed = attempt.mode === "timed" && attempt.expires_at;
-  const answeredNow = answer.selected.length > 0;
+  const answeredNow = isQuestionAnswered(current, answer);
 
   return (
     <div className="space-y-6">
@@ -178,7 +187,16 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
         </StatusAlert>
       ) : null}
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px]">
+      <div
+        className={
+          caseStudy
+            ? "grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_240px]"
+            : "grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px]"
+        }
+      >
+        {caseStudy ? (
+          <CaseStudyPanel caseStudy={caseStudy} questionNumbers={caseStudyQuestionNumbers} />
+        ) : null}
         <div>
           <QuestionView
             question={current}
@@ -186,6 +204,7 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
             total={questions.length}
             answer={answer}
             onSelect={(optionId) => selectOption(current, optionId)}
+            onStatement={(statementId, value) => setStatement(current, statementId, value)}
           />
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -204,7 +223,7 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
             </SecondaryButton>
             <SecondaryButton
               onClick={() => clearAnswer(current.question_id)}
-              disabled={answer.selected.length === 0}
+              disabled={!answeredNow && answer.selected.length === 0}
             >
               <Eraser aria-hidden="true" /> Clear answer
             </SecondaryButton>

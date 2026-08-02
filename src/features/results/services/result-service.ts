@@ -17,6 +17,8 @@ export async function getAttemptResult(attemptId: string): Promise<AttemptResult
   return {
     ...row,
     percentage: Number(row.percentage ?? 0),
+    earned_points: row.earned_points === null ? undefined : Number(row.earned_points),
+    available_points: row.available_points === null ? undefined : Number(row.available_points),
     domains: (row.domains ?? []) as unknown as DomainBreakdown[],
   } as AttemptResult;
 }

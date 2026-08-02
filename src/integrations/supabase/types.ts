@@ -4134,6 +4134,9 @@ export type Database = {
         Returns: {
           attempt_id: string
           available_points: number
+          blueprint_duration_minutes: number
+          blueprint_name: string
+          blueprint_snapshot: Json
           correct_count: number
           domains: Json
           duration_seconds: number
@@ -4158,6 +4161,8 @@ export type Database = {
       get_attempt_review: {
         Args: { _attempt_id: string }
         Returns: {
+          case_study_id: string
+          case_study_title: string
           difficulty: string
           domain_name: string
           earned_points: number
@@ -4171,6 +4176,7 @@ export type Database = {
           scenario: string
           selected_option_ids: string[]
           sort_order: number
+          statement_responses: Json
           status: string
           stem: string
           topic_name: string

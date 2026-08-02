@@ -3,6 +3,9 @@ export type DomainBreakdown = {
   total: number;
   correct: number;
   percentage: number;
+  /** Partial credit aware totals. Older attempts may not carry them. */
+  earned_points?: number;
+  available_points?: number;
 };
 
 export type AttemptResult = {
@@ -22,6 +25,18 @@ export type AttemptResult = {
   incorrect_count: number;
   unanswered_count: number;
   domains: DomainBreakdown[];
+  /** Scoring model that produced the scaled score, e.g. `v1`. */
+  scoring_model_version?: string;
+  /** Unscored trial items included in the sitting. */
+  pilot_count?: number;
+  /** Items that actually counted towards the score. */
+  scored_count?: number;
+  earned_points?: number;
+  available_points?: number;
+  /** Blueprint the attempt followed, when one was applied. */
+  blueprint_name?: string | null;
+  blueprint_duration_minutes?: number | null;
+  blueprint_snapshot?: unknown;
 };
 
 export function formatDuration(totalSeconds: number): string {
