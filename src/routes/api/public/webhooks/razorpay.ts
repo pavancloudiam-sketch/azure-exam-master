@@ -75,7 +75,7 @@ export const Route = createFileRoute("/api/public/webhooks/razorpay")({
         const eventId =
           request.headers.get("x-razorpay-event-id") ??
           `${eventType}:${String(payload["created_at"] ?? Date.now())}`;
-        const { entity, orderId, reference } = extract(payload);
+        const { entity, orderId, reference, amountMinor, currency } = extract(payload);
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -120,6 +120,8 @@ export const Route = createFileRoute("/api/public/webhooks/razorpay")({
               _provider_reference: reference ?? eventId,
               _method: entity?.method ?? "upi",
               _payload: trimmed,
+              ...(typeof amountMinor === "number" ? { _amount_minor: amountMinor } : {}),
+              ...(currency ? { _currency: currency } : {}),
             });
             if (error) throw error;
           } else if (eventType === "payment.failed") {
