@@ -117,23 +117,73 @@ Fallback surfaces:
 is a HEAD count — it exercises PostgREST, the pooler and Postgres and returns
 no rows. Failures also emit `health.check_failed` to the server log.
 
-## 5. External error monitoring — recommendation only
+## 5. Production monitoring (Sentry)
 
-**No external error-monitoring service is configured.** Logs currently live in
-the platform's server logs and the browser console; there is no alerting,
-retention beyond the platform default, or release tracking.
+External monitoring is **configurable and optional**. With no `SENTRY_DSN` the
+application behaves exactly as documented above: structured JSON lines only.
+With a DSN configured, the same records are mirrored to Sentry. The logging
+model itself is unchanged — nothing bypasses `logEvent` / `redact.ts`.
 
-Recommended: **Sentry** (`@sentry/react` + the TanStack Start/Cloudflare
-Workers SDK). It fits because it supports source-mapped React stack traces,
-Workers-compatible transport, release health, and — importantly for this app —
-`beforeSend` scrubbing that can enforce the same deny-list used in
-`redact.ts`. Alternatives: Better Stack (cheap log retention plus alerting) or
-Axiom (good fit if the JSON-line server logs are shipped as-is).
+### Architecture
 
-Integration would be roughly: add the DSN as a secret, initialise in
-`src/router.tsx` and `src/start.ts`, forward `logEvent` records as breadcrumbs,
-capture `ui.unhandled_error` / `server.unexpected_error` as exceptions, and set
-`sendDefaultPii: false` plus a `beforeSend` hook reusing `redactContext`.
+```
+browser  logEvent ──► console + POST /api/public/telemetry
+                                   │  (validated, redacted, closed enum)
+                                   ▼
+server   reportServerEvent ──► JSON log line ──► captureToSentry ──► Sentry
+cron     raiseOpsAlert ───────┘   (tag alert=true)
+```
+
+* `src/features/observability/sentry.server.ts` — dependency-free transport
+  that posts a Sentry *envelope* with `fetch`. No SDK is bundled, nothing
+  Node-specific runs in the Worker, and the DSN never reaches the browser:
+  browser events are relayed to `/api/public/telemetry` and forwarded to Sentry
+  **from the server**.
+* `src/features/observability/monitoring.server.ts` — `reportServerEvent()`
+  (structured line + optional Sentry mirror) and `raiseOpsAlert()` for
+  unattended background failures. Both re-run `redactContext` / `redactText`
+  before anything leaves the process, so the deny-list applies to Sentry too.
+* Reporting points: `errorMiddleware` in `src/start.ts`
+  (`server.unexpected_error`), the telemetry ingest (all relayed client `warn`
+  and `error` events), and the queue-worker cron route.
+
+### Correlation IDs
+
+`correlation_id` (browser session) and `request_id` (single operation, shown to
+the user as the support reference) are sent as Sentry **tags**, so a reference
+quoted by a user resolves to the exact issue and to the matching log lines.
+Background runs get their own id: the cron route reads `x-request-id` (or mints
+one), passes it to `runQueueWorker` as the run correlation id, echoes it in the
+`x-request-id` response header and includes it in `queue.run_completed`.
+
+### Alerts
+
+| Alert | Code | Raised when |
+| --- | --- | --- |
+| Cron failure | `cron.run_failed` | the worker tick throws — the whole run died |
+| Retention failure | `retention.run_failed` | `run_nightly_retention` fails, or completes with per-step errors |
+| Queue dead letters | `queue.jobs_dead_lettered` | dead-lettered jobs in one run ≥ `MONITOR_DEAD_LETTER_THRESHOLD` |
+
+All alerts carry `alert=true` in `extra`, so one Sentry alert rule
+(`code` tag in the set above, or `alert:true`) covers unattended failures
+without a second delivery channel. Counters only — never recipients, payloads
+or signing material.
+
+### Environment variables (server-only)
+
+| Variable | Required | Meaning |
+| --- | --- | --- |
+| `SENTRY_DSN` | no | Enables reporting. Absent or malformed → monitoring stays off (one `monitor.disabled` warning) and the app is unaffected. |
+| `SENTRY_ENVIRONMENT` | no | Environment tag; defaults to `NODE_ENV` or `production`. |
+| `SENTRY_RELEASE` | no | Release tag for regression tracking (e.g. the app version or commit sha). |
+| `MONITOR_DEAD_LETTER_THRESHOLD` | no | Dead letters in one worker run before an alert fires. Default `1`. |
+
+None of these are read at module scope; they are resolved inside handlers.
+The DSN is a server secret — store it with the platform secret manager, never
+in the repository and never under a `VITE_` name (that would ship it to the
+browser).
+
+
 
 ## 6. Operational metrics
 
