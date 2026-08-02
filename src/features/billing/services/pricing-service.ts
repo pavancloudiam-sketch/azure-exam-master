@@ -77,9 +77,7 @@ export async function setPromotionActive(id: string, isActive: boolean): Promise
 }
 
 export async function getPromotionReport(): Promise<PromotionReportRow[]> {
-  const { data, error } = await supabase.rpc("get_promotion_report", {
-    _promotion_id: undefined,
-  });
+  const { data, error } = await supabase.rpc("get_promotion_report", {});
   if (error) throw error;
   return (data ?? []) as unknown as PromotionReportRow[];
 }
