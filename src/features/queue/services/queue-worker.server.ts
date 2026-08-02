@@ -11,6 +11,7 @@ import {
 export type QueueRunSummary = {
   emails: { claimed: number; sent: number; retried: number; deadLettered: number };
   webhooks: { claimed: number; delivered: number; retried: number; deadLettered: number };
+  retention: { status: string };
   duration_ms: number;
 };
 
@@ -43,6 +44,7 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
   const summary: QueueRunSummary = {
     emails: { claimed: 0, sent: 0, retried: 0, deadLettered: 0 },
     webhooks: { claimed: 0, delivered: 0, retried: 0, deadLettered: 0 },
+    retention: { status: "skipped" },
     duration_ms: 0,
   };
 
@@ -165,6 +167,36 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
     else summary.webhooks.retried += 1;
   }
 
+  // ------------------------------------------------------------- retention
+  // No second scheduler: the existing per-minute cron tick asks the database to
+  // run the nightly retention routine, which itself no-ops unless the last
+  // successful run is older than 20 hours (advisory-locked, so overlapping
+  // ticks can never run it twice).
+  try {
+    const { data: retention, error: retentionError } = await supabaseAdmin.rpc(
+      "run_nightly_retention",
+      { _force: false },
+    );
+    if (retentionError) throw retentionError;
+    const result = (retention ?? {}) as { status?: string; report?: Record<string, unknown> };
+    summary.retention.status = result.status ?? "unknown";
+    if (result.status === "completed") {
+      log("retention.run_completed", "Nightly retention run finished", result.report ?? {});
+    }
+  } catch (cause) {
+    summary.retention.status = "error";
+    console.error(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        severity: "error",
+        code: "retention.run_failed",
+        message: "Nightly retention run failed",
+        source: "server",
+        context: { error_name: (cause as Error)?.name ?? "Error" },
+      }),
+    );
+  }
+
   summary.duration_ms = Date.now() - startedAt;
   log("queue.run_completed", "Queue worker run finished", {
     provider: provider.name,
@@ -174,6 +206,7 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
     webhooks_claimed: summary.webhooks.claimed,
     webhooks_delivered: summary.webhooks.delivered,
     webhooks_dead_lettered: summary.webhooks.deadLettered,
+    retention: summary.retention.status,
     duration_ms: summary.duration_ms,
   });
 
