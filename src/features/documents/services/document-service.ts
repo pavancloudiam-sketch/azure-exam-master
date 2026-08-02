@@ -136,7 +136,7 @@ export async function uploadDocument(input: DocumentUploadInput): Promise<Docume
   const storagePath = `${input.folderId ?? "root"}/${crypto.randomUUID()}.${extension}`;
 
   const { error: uploadError } = await supabase.storage.from(BUCKET).upload(storagePath, input.file, {
-    contentType: input.file.type || undefined,
+    contentType: input.file.type || "application/octet-stream",
     upsert: false,
   });
   if (uploadError) throw uploadError;
