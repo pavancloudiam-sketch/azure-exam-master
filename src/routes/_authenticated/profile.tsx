@@ -63,8 +63,8 @@ function ProfilePage() {
           ) : (
             <ul className="space-y-2">
               {memberships.map((membership) => (
-                <li key={membership.organizationId} className="flex items-center justify-between gap-3">
-                  <span className="truncate text-sm font-medium">{membership.organizationName}</span>
+                <li key={membership.organization.id} className="flex items-center justify-between gap-3">
+                  <span className="truncate text-sm font-medium">{membership.organization.name}</span>
                   <StatusBadge tone={membership.isOrgAdmin ? "info" : "neutral"}>
                     {membership.isOrgAdmin ? "Organisation admin" : "Member"}
                   </StatusBadge>
