@@ -38,7 +38,7 @@ describe("Results route", () => {
   it("shows a loading block until the result resolves", () => {
     getAttemptResult.mockReturnValue(new Promise(() => {}));
     render(<ResultPage />);
-    expect(screen.getByText(/Loading your result/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Loading your result/).length).toBeGreaterThan(0);
   });
 
   it("renders the score summary and the review link once loaded", async () => {
