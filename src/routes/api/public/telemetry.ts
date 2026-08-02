@@ -56,6 +56,28 @@ export const Route = createFileRoute("/api/public/telemetry")({
         else if (event.severity === "warn") console.warn(line);
         else console.info(line);
 
+        // Error reporting: relayed browser errors are mirrored to Sentry from
+        // the server, so no DSN ever reaches the browser bundle. The record is
+        // already validated and redacted; correlation and request ids become
+        // Sentry tags so a support reference resolves to one issue.
+        if (event.severity !== "info") {
+          const { captureToSentry, isSentryEnabled } = await import(
+            "@/features/observability/sentry.server"
+          );
+          if (isSentryEnabled()) {
+            await captureToSentry({
+              code: event.code,
+              message: event.message,
+              severity: event.severity,
+              correlationId: event.correlation_id,
+              requestId: event.request_id,
+              route: event.route,
+              source: "client",
+              context: event.context,
+            });
+          }
+        }
+
         return new Response(null, { status: 204 });
       },
     },
