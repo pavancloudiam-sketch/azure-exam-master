@@ -31,6 +31,11 @@ export async function getAttemptReview(attemptId: string): Promise<ReviewQuestio
     marked_for_review: row.marked_for_review,
     selected_option_ids: row.selected_option_ids ?? [],
     status: row.status as ReviewStatus,
+    is_pilot: row.is_pilot ?? false,
+    earned_points: row.earned_points === null ? null : Number(row.earned_points),
+    statement_responses: (row.statement_responses ?? {}) as Record<string, "yes" | "no">,
+    case_study_id: row.case_study_id ?? null,
+    case_study_title: row.case_study_title ?? null,
     options: ((row.options ?? []) as unknown as ReviewOption[]).slice().sort(
       (a, b) => a.sort_order - b.sort_order,
     ),
