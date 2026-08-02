@@ -296,7 +296,13 @@ function BlueprintsAdminPage() {
             description="Create a blueprint to control question counts, weighting and scoring for an exam."
           />
         ) : (
-          <DataTable data={filtered} columns={columns} getRowId={(row) => row.id} />
+          <DataTable
+            caption="Exam blueprints"
+            rows={filtered}
+            columns={columns}
+            getRowId={(row) => row.id}
+          />
+
         )}
       </div>
 
