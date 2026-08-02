@@ -338,17 +338,21 @@ function BlueprintsAdminPage() {
       />
 
       {readinessFor ? (
-        <ConfirmDialog
+        <Modal
           open
-          onOpenChange={(open) => !open && setReadinessFor(null)}
+          onOpenChange={(open) => {
+            if (!open) setReadinessFor(null);
+          }}
           title={`Readiness — ${readinessFor.name}`}
           description="Approved question coverage for each weighted skill area."
-          confirmLabel="Close"
-          onConfirm={async () => setReadinessFor(null)}
+          footer={
+            <SecondaryButton onClick={() => setReadinessFor(null)}>Close</SecondaryButton>
+          }
         >
           <ReadinessPanel blueprint={readinessFor} />
-        </ConfirmDialog>
+        </Modal>
       ) : null}
+
     </PageShell>
   );
 }
