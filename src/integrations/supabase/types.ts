@@ -2640,6 +2640,36 @@ export type Database = {
           },
         ]
       }
+      retention_runs: {
+        Row: {
+          created_at: string
+          errors: Json
+          finished_at: string | null
+          id: string
+          report: Json
+          started_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          report?: Json
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          report?: Json
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       scim_provisioning_tokens: {
         Row: {
           created_at: string
@@ -3412,6 +3442,11 @@ export type Database = {
         Returns: string
       }
       exam_is_available: { Args: { _exam_id: string }; Returns: boolean }
+      execute_account_deletion: { Args: { _request_id: string }; Returns: Json }
+      execute_organization_deletion: {
+        Args: { _request_id: string }
+        Returns: Json
+      }
       expire_due_access: { Args: never; Returns: Json }
       export_my_data: {
         Args: never
@@ -3657,6 +3692,17 @@ export type Database = {
           _entity_id: string
           _entity_label: string
           _entity_type: string
+        }
+        Returns: undefined
+      }
+      log_retention_action: {
+        Args: {
+          _action: string
+          _details?: Json
+          _entity_id: string
+          _entity_label: string
+          _entity_type: string
+          _organization_id?: string
         }
         Returns: undefined
       }
@@ -3973,6 +4019,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      run_nightly_retention: { Args: { _force?: boolean }; Returns: Json }
       scan_import_duplicates: { Args: { _batch_id: string }; Returns: number }
       set_organization_webhook_status: {
         Args: { _status: string; _webhook_id: string }
