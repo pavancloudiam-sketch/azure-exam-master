@@ -45,6 +45,7 @@ import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminAdminAiRouteImport } from './routes/_authenticated/_admin/admin/ai'
 import { Route as AuthenticatedAdminAdminAuditRouteImport } from './routes/_authenticated/_admin/admin/audit'
 import { Route as AuthenticatedAdminAdminBillingRouteImport } from './routes/_authenticated/_admin/admin/billing'
+import { Route as AuthenticatedAdminAdminBlueprintsRouteImport } from './routes/_authenticated/_admin/admin/blueprints'
 import { Route as AuthenticatedAdminAdminCertificationsRouteImport } from './routes/_authenticated/_admin/admin/certifications'
 import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin/documents'
 import { Route as AuthenticatedAdminAdminDomainsRouteImport } from './routes/_authenticated/_admin/admin/domains'
@@ -53,6 +54,7 @@ import { Route as AuthenticatedAdminAdminImportRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminAdminOrganizationsRouteImport } from './routes/_authenticated/_admin/admin/organizations'
 import { Route as AuthenticatedAdminAdminPrivacyRouteImport } from './routes/_authenticated/_admin/admin/privacy'
 import { Route as AuthenticatedAdminAdminQuestionsRouteImport } from './routes/_authenticated/_admin/admin/questions'
+import { Route as AuthenticatedAdminAdminReadinessRouteImport } from './routes/_authenticated/_admin/admin/readiness'
 import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_authenticated/_admin/admin/settings'
 import { Route as AuthenticatedAdminAdminStudentsRouteImport } from './routes/_authenticated/_admin/admin/students'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
@@ -253,6 +255,12 @@ const AuthenticatedAdminAdminBillingRoute =
     path: '/admin/billing',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminBlueprintsRoute =
+  AuthenticatedAdminAdminBlueprintsRouteImport.update({
+    id: '/admin/blueprints',
+    path: '/admin/blueprints',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminCertificationsRoute =
   AuthenticatedAdminAdminCertificationsRouteImport.update({
     id: '/admin/certifications',
@@ -299,6 +307,12 @@ const AuthenticatedAdminAdminQuestionsRoute =
   AuthenticatedAdminAdminQuestionsRouteImport.update({
     id: '/admin/questions',
     path: '/admin/questions',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAdminReadinessRoute =
+  AuthenticatedAdminAdminReadinessRouteImport.update({
+    id: '/admin/readiness',
+    path: '/admin/readiness',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAdminSettingsRoute =
@@ -388,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
+  '/admin/blueprints': typeof AuthenticatedAdminAdminBlueprintsRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
@@ -396,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -441,6 +457,7 @@ export interface FileRoutesByTo {
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
+  '/admin/blueprints': typeof AuthenticatedAdminAdminBlueprintsRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
@@ -449,6 +466,7 @@ export interface FileRoutesByTo {
   '/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -497,6 +515,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/_authenticated/_admin/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/_authenticated/_admin/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
+  '/_authenticated/_admin/admin/blueprints': typeof AuthenticatedAdminAdminBlueprintsRoute
   '/_authenticated/_admin/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
   '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/_authenticated/_admin/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
@@ -505,6 +524,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/_authenticated/_admin/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/_authenticated/_admin/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/_authenticated/_admin/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/_authenticated/_admin/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/_authenticated/_admin/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -552,6 +572,7 @@ export interface FileRouteTypes {
     | '/admin/ai'
     | '/admin/audit'
     | '/admin/billing'
+    | '/admin/blueprints'
     | '/admin/certifications'
     | '/admin/documents'
     | '/admin/domains'
@@ -560,6 +581,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/privacy'
     | '/admin/questions'
+    | '/admin/readiness'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/topics'
@@ -605,6 +627,7 @@ export interface FileRouteTypes {
     | '/admin/ai'
     | '/admin/audit'
     | '/admin/billing'
+    | '/admin/blueprints'
     | '/admin/certifications'
     | '/admin/documents'
     | '/admin/domains'
@@ -613,6 +636,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/privacy'
     | '/admin/questions'
+    | '/admin/readiness'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/topics'
@@ -660,6 +684,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/ai'
     | '/_authenticated/_admin/admin/audit'
     | '/_authenticated/_admin/admin/billing'
+    | '/_authenticated/_admin/admin/blueprints'
     | '/_authenticated/_admin/admin/certifications'
     | '/_authenticated/_admin/admin/documents'
     | '/_authenticated/_admin/admin/domains'
@@ -668,6 +693,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/organizations'
     | '/_authenticated/_admin/admin/privacy'
     | '/_authenticated/_admin/admin/questions'
+    | '/_authenticated/_admin/admin/readiness'
     | '/_authenticated/_admin/admin/settings'
     | '/_authenticated/_admin/admin/students'
     | '/_authenticated/_admin/admin/topics'
@@ -956,6 +982,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminBillingRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/blueprints': {
+      id: '/_authenticated/_admin/admin/blueprints'
+      path: '/admin/blueprints'
+      fullPath: '/admin/blueprints'
+      preLoaderRoute: typeof AuthenticatedAdminAdminBlueprintsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/certifications': {
       id: '/_authenticated/_admin/admin/certifications'
       path: '/admin/certifications'
@@ -1010,6 +1043,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/questions'
       fullPath: '/admin/questions'
       preLoaderRoute: typeof AuthenticatedAdminAdminQuestionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/admin/readiness': {
+      id: '/_authenticated/_admin/admin/readiness'
+      path: '/admin/readiness'
+      fullPath: '/admin/readiness'
+      preLoaderRoute: typeof AuthenticatedAdminAdminReadinessRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/_admin/admin/settings': {
@@ -1097,6 +1137,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminAiRoute: typeof AuthenticatedAdminAdminAiRouteWithChildren
   AuthenticatedAdminAdminAuditRoute: typeof AuthenticatedAdminAdminAuditRoute
   AuthenticatedAdminAdminBillingRoute: typeof AuthenticatedAdminAdminBillingRoute
+  AuthenticatedAdminAdminBlueprintsRoute: typeof AuthenticatedAdminAdminBlueprintsRoute
   AuthenticatedAdminAdminCertificationsRoute: typeof AuthenticatedAdminAdminCertificationsRoute
   AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
   AuthenticatedAdminAdminDomainsRoute: typeof AuthenticatedAdminAdminDomainsRoute
@@ -1105,6 +1146,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminOrganizationsRoute: typeof AuthenticatedAdminAdminOrganizationsRoute
   AuthenticatedAdminAdminPrivacyRoute: typeof AuthenticatedAdminAdminPrivacyRoute
   AuthenticatedAdminAdminQuestionsRoute: typeof AuthenticatedAdminAdminQuestionsRoute
+  AuthenticatedAdminAdminReadinessRoute: typeof AuthenticatedAdminAdminReadinessRoute
   AuthenticatedAdminAdminSettingsRoute: typeof AuthenticatedAdminAdminSettingsRoute
   AuthenticatedAdminAdminStudentsRoute: typeof AuthenticatedAdminAdminStudentsRoute
   AuthenticatedAdminAdminTopicsRoute: typeof AuthenticatedAdminAdminTopicsRoute
@@ -1116,6 +1158,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminAiRoute: AuthenticatedAdminAdminAiRouteWithChildren,
   AuthenticatedAdminAdminAuditRoute: AuthenticatedAdminAdminAuditRoute,
   AuthenticatedAdminAdminBillingRoute: AuthenticatedAdminAdminBillingRoute,
+  AuthenticatedAdminAdminBlueprintsRoute:
+    AuthenticatedAdminAdminBlueprintsRoute,
   AuthenticatedAdminAdminCertificationsRoute:
     AuthenticatedAdminAdminCertificationsRoute,
   AuthenticatedAdminAdminDocumentsRoute: AuthenticatedAdminAdminDocumentsRoute,
@@ -1126,6 +1170,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAdminOrganizationsRoute,
   AuthenticatedAdminAdminPrivacyRoute: AuthenticatedAdminAdminPrivacyRoute,
   AuthenticatedAdminAdminQuestionsRoute: AuthenticatedAdminAdminQuestionsRoute,
+  AuthenticatedAdminAdminReadinessRoute: AuthenticatedAdminAdminReadinessRoute,
   AuthenticatedAdminAdminSettingsRoute: AuthenticatedAdminAdminSettingsRoute,
   AuthenticatedAdminAdminStudentsRoute: AuthenticatedAdminAdminStudentsRoute,
   AuthenticatedAdminAdminTopicsRoute: AuthenticatedAdminAdminTopicsRoute,
