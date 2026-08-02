@@ -27,6 +27,8 @@ import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedInterviewRouteImport } from './routes/_authenticated/interview'
 import { Route as AuthenticatedOrganizationRouteImport } from './routes/_authenticated/organization'
 import { Route as AuthenticatedPrivacyRouteImport } from './routes/_authenticated/privacy'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
 import { Route as AuthenticatedStudyRouteImport } from './routes/_authenticated/study'
 import { Route as LegalDocSlugRouteImport } from './routes/legal/$docSlug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -145,6 +147,16 @@ const AuthenticatedOrganizationRoute =
 const AuthenticatedPrivacyRoute = AuthenticatedPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedStudyRoute = AuthenticatedStudyRouteImport.update({
@@ -326,6 +338,8 @@ export interface FileRoutesByFullPath {
   '/interview': typeof AuthenticatedInterviewRoute
   '/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/privacy': typeof AuthenticatedPrivacyRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -372,6 +386,8 @@ export interface FileRoutesByTo {
   '/interview': typeof AuthenticatedInterviewRoute
   '/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/privacy': typeof AuthenticatedPrivacyRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -421,6 +437,8 @@ export interface FileRoutesById {
   '/_authenticated/interview': typeof AuthenticatedInterviewRoute
   '/_authenticated/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -469,6 +487,8 @@ export interface FileRouteTypes {
     | '/interview'
     | '/organization'
     | '/privacy'
+    | '/profile'
+    | '/resources'
     | '/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -515,6 +535,8 @@ export interface FileRouteTypes {
     | '/interview'
     | '/organization'
     | '/privacy'
+    | '/profile'
+    | '/resources'
     | '/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -563,6 +585,8 @@ export interface FileRouteTypes {
     | '/_authenticated/interview'
     | '/_authenticated/organization'
     | '/_authenticated/privacy'
+    | '/_authenticated/profile'
+    | '/_authenticated/resources'
     | '/_authenticated/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -740,6 +764,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof AuthenticatedPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/resources': {
+      id: '/_authenticated/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof AuthenticatedResourcesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/study': {
@@ -1020,6 +1058,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInterviewRoute: typeof AuthenticatedInterviewRoute
   AuthenticatedOrganizationRoute: typeof AuthenticatedOrganizationRouteWithChildren
   AuthenticatedPrivacyRoute: typeof AuthenticatedPrivacyRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedStudyRoute: typeof AuthenticatedStudyRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
@@ -1035,6 +1075,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInterviewRoute: AuthenticatedInterviewRoute,
   AuthenticatedOrganizationRoute: AuthenticatedOrganizationRouteWithChildren,
   AuthenticatedPrivacyRoute: AuthenticatedPrivacyRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedStudyRoute: AuthenticatedStudyRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
