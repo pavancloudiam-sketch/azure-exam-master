@@ -1190,15 +1190,20 @@ export type Database = {
           attested_at: string | null
           attested_by: string | null
           certification_id: string | null
+          commit_report: Json
+          committed_at: string | null
+          committed_by: string | null
           created_at: string
           created_by: string
           duplicate_scanned_at: string | null
           error_rows: number
           expires_at: string
+          failed_rows: number
           file_type: string
           filename: string
           flagged_rows: number
           id: string
+          imported_rows: number
           notes: string | null
           status: string
           total_rows: number
@@ -1210,15 +1215,20 @@ export type Database = {
           attested_at?: string | null
           attested_by?: string | null
           certification_id?: string | null
+          commit_report?: Json
+          committed_at?: string | null
+          committed_by?: string | null
           created_at?: string
           created_by: string
           duplicate_scanned_at?: string | null
           error_rows?: number
           expires_at?: string
+          failed_rows?: number
           file_type?: string
           filename: string
           flagged_rows?: number
           id?: string
+          imported_rows?: number
           notes?: string | null
           status?: string
           total_rows?: number
@@ -1230,15 +1240,20 @@ export type Database = {
           attested_at?: string | null
           attested_by?: string | null
           certification_id?: string | null
+          commit_report?: Json
+          committed_at?: string | null
+          committed_by?: string | null
           created_at?: string
           created_by?: string
           duplicate_scanned_at?: string | null
           error_rows?: number
           expires_at?: string
+          failed_rows?: number
           file_type?: string
           filename?: string
           flagged_rows?: number
           id?: string
+          imported_rows?: number
           notes?: string | null
           status?: string
           total_rows?: number
@@ -1258,6 +1273,7 @@ export type Database = {
       import_staged_rows: {
         Row: {
           batch_id: string
+          committed_at: string | null
           created_at: string
           duplicate_matches: Json
           duplicate_score: number | null
@@ -1267,6 +1283,7 @@ export type Database = {
           id: string
           is_valid: boolean
           normalized: Json
+          question_id: string | null
           raw: Json
           review_note: string | null
           review_status: string
@@ -1276,6 +1293,7 @@ export type Database = {
         }
         Insert: {
           batch_id: string
+          committed_at?: string | null
           created_at?: string
           duplicate_matches?: Json
           duplicate_score?: number | null
@@ -1285,6 +1303,7 @@ export type Database = {
           id?: string
           is_valid?: boolean
           normalized?: Json
+          question_id?: string | null
           raw?: Json
           review_note?: string | null
           review_status?: string
@@ -1294,6 +1313,7 @@ export type Database = {
         }
         Update: {
           batch_id?: string
+          committed_at?: string | null
           created_at?: string
           duplicate_matches?: Json
           duplicate_score?: number | null
@@ -1303,6 +1323,7 @@ export type Database = {
           id?: string
           is_valid?: boolean
           normalized?: Json
+          question_id?: string | null
           raw?: Json
           review_note?: string | null
           review_status?: string
@@ -1316,6 +1337,13 @@ export type Database = {
             columns: ["batch_id"]
             isOneToOne: false
             referencedRelation: "import_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_staged_rows_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
             referencedColumns: ["id"]
           },
         ]
@@ -2960,15 +2988,20 @@ export type Database = {
           attested_at: string | null
           attested_by: string | null
           certification_id: string | null
+          commit_report: Json
+          committed_at: string | null
+          committed_by: string | null
           created_at: string
           created_by: string
           duplicate_scanned_at: string | null
           error_rows: number
           expires_at: string
+          failed_rows: number
           file_type: string
           filename: string
           flagged_rows: number
           id: string
+          imported_rows: number
           notes: string | null
           status: string
           total_rows: number
@@ -3063,6 +3096,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      commit_import_batch: { Args: { _batch_id: string }; Returns: Json }
       create_certification_version: {
         Args: {
           _clone_taxonomy?: boolean
