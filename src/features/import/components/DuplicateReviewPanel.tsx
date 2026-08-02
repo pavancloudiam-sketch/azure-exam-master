@@ -1,6 +1,8 @@
+import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  ConfirmDialog,
   DataTable,
   ErrorState,
   LoadingBlock,
@@ -13,6 +15,7 @@ import {
   type Column,
 } from "@/features/shared/components/ui";
 import {
+  commitBatch,
   listStagedRows,
   scanBatchDuplicates,
   setRowReview,
@@ -70,9 +73,47 @@ export function DuplicateReviewPanel({ batch }: { batch: ImportBatch }) {
     onError: (error: Error) => notify.error(error.message),
   });
 
+  const [confirmCommit, setConfirmCommit] = React.useState(false);
+
+  const commit = useMutation({
+    mutationFn: () => commitBatch(batch),
+    onSuccess: (report) => {
+      setConfirmCommit(false);
+      notify.success(
+        `Import committed — ${report.imported} question${report.imported === 1 ? "" : "s"} created` +
+          (report.skipped_invalid > 0 ? `, ${report.skipped_invalid} invalid row(s) skipped` : ""),
+      );
+      invalidate();
+      void queryClient.invalidateQueries({ queryKey: ["questions"] });
+      void queryClient.invalidateQueries({ queryKey: ["question-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["exams"] });
+      void queryClient.invalidateQueries({ queryKey: ["audit-logs"] });
+    },
+    onError: (error: Error) => {
+      setConfirmCommit(false);
+      notify.error(error.message);
+    },
+  });
+
   const data = rows.data ?? [];
   const flagged = data.filter((row) => row.duplicate_status !== "none" && row.duplicate_status !== "unchecked");
   const pending = flagged.filter((row) => row.review_status === "pending");
+  const validRows = data.filter((row) => row.is_valid);
+  const invalidRows = data.length - validRows.length;
+  const unresolved = validRows.filter(
+    (row) =>
+      row.duplicate_status !== "none" &&
+      row.duplicate_status !== "unchecked" &&
+      row.review_status !== "cleared",
+  ).length;
+  const isCommitted = batch.status === "committed";
+  const canCommit =
+    !isCommitted &&
+    batch.status === "staged" &&
+    Boolean(batch.attested_at) &&
+    validRows.length > 0 &&
+    unresolved === 0 &&
+    new Date(batch.expires_at).getTime() > Date.now();
 
   const columns: Column<ImportStagedRow>[] = [
     { key: "row", header: "Row", render: (row) => <span className="font-mono text-xs">{row.row_number}</span> },
@@ -205,6 +246,53 @@ export function DuplicateReviewPanel({ batch }: { batch: ImportBatch }) {
           emptyMessage="No staged rows in this batch."
         />
       )}
+
+      <div className="rounded-md border border-border bg-surface p-4">
+        <h3 className="text-sm font-semibold">Commit to the question bank</h3>
+        {isCommitted ? (
+          <StatusAlert tone="success" title="Import committed">
+            {batch.imported_rows} question{batch.imported_rows === 1 ? "" : "s"} created
+            {batch.failed_rows > 0 ? `, ${batch.failed_rows} invalid row(s) skipped` : ""}
+            {batch.committed_at ? ` on ${new Date(batch.committed_at).toLocaleString()}` : ""}.
+          </StatusAlert>
+        ) : (
+          <>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Only the {validRows.length} valid row{validRows.length === 1 ? "" : "s"} will be imported
+              {invalidRows > 0 ? `; ${invalidRows} row(s) with errors are skipped` : ""}. The import runs as a single
+              transaction — if any row fails, nothing is created.
+            </p>
+            {!batch.attested_at ? (
+              <p className="mt-2 text-sm text-destructive">
+                The originality attestation must be recorded before this batch can be committed.
+              </p>
+            ) : null}
+            {unresolved > 0 ? (
+              <p className="mt-2 text-sm text-destructive">
+                Resolve {unresolved} flagged duplicate row{unresolved === 1 ? "" : "s"} first.
+              </p>
+            ) : null}
+            <div className="mt-4">
+              <PrimaryButton
+                type="button"
+                onClick={() => setConfirmCommit(true)}
+                disabled={!canCommit || commit.isPending}
+              >
+                {commit.isPending ? "Committing…" : "Commit import"}
+              </PrimaryButton>
+            </div>
+          </>
+        )}
+      </div>
+
+      <ConfirmDialog
+        open={confirmCommit}
+        title="Commit this import?"
+        description={`${validRows.length} question${validRows.length === 1 ? "" : "s"} will be created in the question bank from "${batch.filename}". This cannot be undone from here.`}
+        confirmLabel="Commit import"
+        onConfirm={() => commit.mutate()}
+        onOpenChange={(open) => !open && setConfirmCommit(false)}
+      />
     </div>
   );
 }

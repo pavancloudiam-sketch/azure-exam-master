@@ -19,6 +19,7 @@ export const EVENT_CODES = [
   "import.stage_failed",
   "import.duplicate_scan_failed",
   "import.attestation_failed",
+  "import.commit_failed",
   "db.query_failed",
   "ui.unhandled_error",
   "server.unexpected_error",
