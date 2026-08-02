@@ -259,6 +259,29 @@ export async function listStagedRows(batchId: string): Promise<ImportStagedRow[]
   return data;
 }
 
+export type CommitReport = {
+  imported: number;
+  skipped_invalid: number;
+  total_rows: number;
+  committed_at: string;
+};
+
+/**
+ * Promotes a staged batch into the question bank. The server routine runs as a
+ * single transaction: either every valid row becomes a question with its
+ * options, or nothing is written at all.
+ */
+export async function commitBatch(batch: ImportBatch): Promise<CommitReport> {
+  const { data, error } = await supabase.rpc("commit_import_batch", { _batch_id: batch.id });
+  if (error) {
+    logError("import.commit_failed", "Import could not be committed", error, {
+      batch_id: batch.id,
+    });
+    throw error;
+  }
+  return data as unknown as CommitReport;
+}
+
 export async function discardBatch(batch: ImportBatch): Promise<void> {
   const { error } = await supabase
     .from("import_batches")
