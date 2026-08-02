@@ -700,6 +700,65 @@ export type Database = {
         }
         Relationships: []
       }
+      case_studies: {
+        Row: {
+          business_requirements: string | null
+          certification_id: string
+          constraints: string | null
+          created_at: string
+          created_by: string | null
+          exhibits: Json
+          existing_environment: string | null
+          id: string
+          is_active: boolean
+          organization_overview: string | null
+          security_requirements: string | null
+          technical_requirements: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          business_requirements?: string | null
+          certification_id: string
+          constraints?: string | null
+          created_at?: string
+          created_by?: string | null
+          exhibits?: Json
+          existing_environment?: string | null
+          id?: string
+          is_active?: boolean
+          organization_overview?: string | null
+          security_requirements?: string | null
+          technical_requirements?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          business_requirements?: string | null
+          certification_id?: string
+          constraints?: string | null
+          created_at?: string
+          created_by?: string | null
+          exhibits?: Json
+          existing_environment?: string | null
+          id?: string
+          is_active?: boolean
+          organization_overview?: string | null
+          security_requirements?: string | null
+          technical_requirements?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_studies_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certifications: {
         Row: {
           allow_new_attempts: boolean
@@ -2896,6 +2955,7 @@ export type Database = {
       }
       questions: {
         Row: {
+          case_study_id: string | null
           certification_id: string
           created_at: string
           difficulty: string
@@ -2920,6 +2980,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          case_study_id?: string | null
           certification_id: string
           created_at?: string
           difficulty?: string
@@ -2944,6 +3005,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          case_study_id?: string | null
           certification_id?: string
           created_at?: string
           difficulty?: string
@@ -2968,6 +3030,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "questions_case_study_id_fkey"
+            columns: ["case_study_id"]
+            isOneToOne: false
+            referencedRelation: "case_studies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "questions_certification_id_fkey"
             columns: ["certification_id"]
@@ -4029,6 +4098,21 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_attempt_case_studies: {
+        Args: { _attempt_id: string }
+        Returns: {
+          business_requirements: string
+          constraints: string
+          exhibits: Json
+          existing_environment: string
+          id: string
+          organization_overview: string
+          question_ids: string[]
+          security_requirements: string
+          technical_requirements: string
+          title: string
+        }[]
+      }
       get_attempt_questions: {
         Args: { _attempt_id: string }
         Returns: {
@@ -4092,6 +4176,10 @@ export type Database = {
         Args: { _attempt_id: string }
         Returns: number
       }
+      get_blueprint_readiness: {
+        Args: { _blueprint_id: string }
+        Returns: Json
+      }
       get_branding_for_domain: {
         Args: { _host: string }
         Returns: {
@@ -4125,6 +4213,10 @@ export type Database = {
           topic_count: number
           version: string
         }[]
+      }
+      get_question_bank_readiness: {
+        Args: { _certification_id: string }
+        Returns: Json
       }
       get_question_explanations: {
         Args: { _question_ids: string[] }
