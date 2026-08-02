@@ -1,6 +1,10 @@
 import { buildBrandedEmail } from "@/features/organizations/services/branding-email";
 import type { OrganizationBranding } from "@/features/organizations/types";
 import { signWebhookBody, webhookHeaders } from "@/features/enterprise/services/webhook-signature";
+import {
+  deadLetterAlertThreshold,
+  raiseOpsAlert,
+} from "@/features/observability/monitoring.server";
 
 import {
   PermanentEmailError,
