@@ -1,9 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell } from "@/features/shared/components/PageShell";
-import { StatusBadge, SurfaceCard } from "@/features/shared/components/ui";
+import { StudentDashboard } from "@/features/dashboard/components/StudentDashboard";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { AttemptHistory } from "@/features/results/components/AttemptHistory";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -19,36 +18,14 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardPage() {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
+  const name = user?.email?.split("@")[0] ?? "there";
   return (
     <PageShell
       title="Dashboard"
-      description="Available practice exams and your recent attempts will appear here."
+      description={`Welcome back, ${name}. Here is your practice progress and what to do next.`}
     >
-      <SurfaceCard>
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm text-muted-foreground">Signed in as</span>
-          <span className="text-sm font-medium">{user?.email}</span>
-          <StatusBadge tone={isAdmin ? "info" : "neutral"}>
-            {isAdmin ? "admin" : "student"}
-          </StatusBadge>
-        </div>
-      </SurfaceCard>
-      <div className="mt-6">
-        <Link
-          to="/exams"
-          className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        >
-          Browse practice exams
-        </Link>
-      </div>
-
-      <section className="mt-10" aria-labelledby="attempts-heading">
-        <h2 id="attempts-heading" className="mb-3 text-lg font-semibold">
-          Recent attempts
-        </h2>
-        <AttemptHistory />
-      </section>
+      <StudentDashboard />
     </PageShell>
   );
 }
