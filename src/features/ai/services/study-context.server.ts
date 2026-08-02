@@ -16,15 +16,20 @@ export type MistakeSummary = {
   chosenAnswers: string[];
 };
 
+export type AttemptScore = { submittedAt: string | null; percentage: number | null };
+
 export type StudyContext = {
   submittedAttempts: number;
   answeredQuestions: number;
   averagePercentage: number | null;
+  /** Oldest to newest, for progress/trend analysis. */
+  attemptTrend: AttemptScore[];
   domains: DomainStat[];
   topics: TopicStat[];
   mistakes: MistakeSummary[];
   uncoveredTopics: { topic: string; domain: string }[];
 };
+
 
 async function admin() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
