@@ -7,6 +7,9 @@ import type { ReviewFilter, ReviewQuestion } from "../types";
 function matches(question: ReviewQuestion, filter: ReviewFilter): boolean {
   if (filter === "all") return true;
   if (filter === "marked") return question.marked_for_review;
+  // Partially credited answers sit with the incorrect ones: there is still
+  // something to learn from them.
+  if (filter === "incorrect") return question.status === "incorrect" || question.status === "partial";
   return question.status === filter;
 }
 
@@ -43,7 +46,7 @@ export function useAttemptReview(attemptId: string) {
     () => ({
       all: questions.length,
       correct: questions.filter((q) => q.status === "correct").length,
-      incorrect: questions.filter((q) => q.status === "incorrect").length,
+      incorrect: questions.filter((q) => q.status === "incorrect" || q.status === "partial").length,
       unanswered: questions.filter((q) => q.status === "unanswered").length,
       marked: questions.filter((q) => q.marked_for_review).length,
     }),

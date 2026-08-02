@@ -223,7 +223,7 @@ export function ExamRunner({ attemptId, examTitle }: { attemptId: string; examTi
             </SecondaryButton>
             <SecondaryButton
               onClick={() => clearAnswer(current.question_id)}
-              disabled={answer.selected.length === 0}
+              disabled={!answeredNow && answer.selected.length === 0}
             >
               <Eraser aria-hidden="true" /> Clear answer
             </SecondaryButton>
