@@ -54,6 +54,7 @@ import { Route as AuthenticatedAdminAdminImportRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminAdminOrganizationsRouteImport } from './routes/_authenticated/_admin/admin/organizations'
 import { Route as AuthenticatedAdminAdminPrivacyRouteImport } from './routes/_authenticated/_admin/admin/privacy'
 import { Route as AuthenticatedAdminAdminQuestionsRouteImport } from './routes/_authenticated/_admin/admin/questions'
+import { Route as AuthenticatedAdminAdminReadinessRouteImport } from './routes/_authenticated/_admin/admin/readiness'
 import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_authenticated/_admin/admin/settings'
 import { Route as AuthenticatedAdminAdminStudentsRouteImport } from './routes/_authenticated/_admin/admin/students'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
@@ -308,6 +309,12 @@ const AuthenticatedAdminAdminQuestionsRoute =
     path: '/admin/questions',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminReadinessRoute =
+  AuthenticatedAdminAdminReadinessRouteImport.update({
+    id: '/admin/readiness',
+    path: '/admin/readiness',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminSettingsRoute =
   AuthenticatedAdminAdminSettingsRouteImport.update({
     id: '/admin/settings',
@@ -404,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -458,6 +466,7 @@ export interface FileRoutesByTo {
   '/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -515,6 +524,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/organizations': typeof AuthenticatedAdminAdminOrganizationsRoute
   '/_authenticated/_admin/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/_authenticated/_admin/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
+  '/_authenticated/_admin/admin/readiness': typeof AuthenticatedAdminAdminReadinessRoute
   '/_authenticated/_admin/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/_authenticated/_admin/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
@@ -571,6 +581,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/privacy'
     | '/admin/questions'
+    | '/admin/readiness'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/topics'
@@ -625,6 +636,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/privacy'
     | '/admin/questions'
+    | '/admin/readiness'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/topics'
@@ -681,6 +693,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/organizations'
     | '/_authenticated/_admin/admin/privacy'
     | '/_authenticated/_admin/admin/questions'
+    | '/_authenticated/_admin/admin/readiness'
     | '/_authenticated/_admin/admin/settings'
     | '/_authenticated/_admin/admin/students'
     | '/_authenticated/_admin/admin/topics'
@@ -1032,6 +1045,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminQuestionsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/readiness': {
+      id: '/_authenticated/_admin/admin/readiness'
+      path: '/admin/readiness'
+      fullPath: '/admin/readiness'
+      preLoaderRoute: typeof AuthenticatedAdminAdminReadinessRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/settings': {
       id: '/_authenticated/_admin/admin/settings'
       path: '/admin/settings'
@@ -1126,6 +1146,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminOrganizationsRoute: typeof AuthenticatedAdminAdminOrganizationsRoute
   AuthenticatedAdminAdminPrivacyRoute: typeof AuthenticatedAdminAdminPrivacyRoute
   AuthenticatedAdminAdminQuestionsRoute: typeof AuthenticatedAdminAdminQuestionsRoute
+  AuthenticatedAdminAdminReadinessRoute: typeof AuthenticatedAdminAdminReadinessRoute
   AuthenticatedAdminAdminSettingsRoute: typeof AuthenticatedAdminAdminSettingsRoute
   AuthenticatedAdminAdminStudentsRoute: typeof AuthenticatedAdminAdminStudentsRoute
   AuthenticatedAdminAdminTopicsRoute: typeof AuthenticatedAdminAdminTopicsRoute
@@ -1149,6 +1170,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAdminOrganizationsRoute,
   AuthenticatedAdminAdminPrivacyRoute: AuthenticatedAdminAdminPrivacyRoute,
   AuthenticatedAdminAdminQuestionsRoute: AuthenticatedAdminAdminQuestionsRoute,
+  AuthenticatedAdminAdminReadinessRoute: AuthenticatedAdminAdminReadinessRoute,
   AuthenticatedAdminAdminSettingsRoute: AuthenticatedAdminAdminSettingsRoute,
   AuthenticatedAdminAdminStudentsRoute: AuthenticatedAdminAdminStudentsRoute,
   AuthenticatedAdminAdminTopicsRoute: AuthenticatedAdminAdminTopicsRoute,
