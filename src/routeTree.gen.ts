@@ -41,6 +41,7 @@ import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminAdminAiRouteImport } from './routes/_authenticated/_admin/admin/ai'
 import { Route as AuthenticatedAdminAdminBillingRouteImport } from './routes/_authenticated/_admin/admin/billing'
 import { Route as AuthenticatedAdminAdminCertificationsRouteImport } from './routes/_authenticated/_admin/admin/certifications'
+import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin/documents'
 import { Route as AuthenticatedAdminAdminDomainsRouteImport } from './routes/_authenticated/_admin/admin/domains'
 import { Route as AuthenticatedAdminAdminExamsRouteImport } from './routes/_authenticated/_admin/admin/exams'
 import { Route as AuthenticatedAdminAdminImportRouteImport } from './routes/_authenticated/_admin/admin/import'
@@ -225,6 +226,12 @@ const AuthenticatedAdminAdminCertificationsRoute =
     path: '/admin/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminDocumentsRoute =
+  AuthenticatedAdminAdminDocumentsRouteImport.update({
+    id: '/admin/documents',
+    path: '/admin/documents',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminDomainsRoute =
   AuthenticatedAdminAdminDomainsRouteImport.update({
     id: '/admin/domains',
@@ -332,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -377,6 +385,7 @@ export interface FileRoutesByTo {
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -425,6 +434,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
   '/_authenticated/_admin/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/_authenticated/_admin/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/_authenticated/_admin/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/_authenticated/_admin/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/_authenticated/_admin/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -472,6 +482,7 @@ export interface FileRouteTypes {
     | '/admin/ai'
     | '/admin/billing'
     | '/admin/certifications'
+    | '/admin/documents'
     | '/admin/domains'
     | '/admin/exams'
     | '/admin/import'
@@ -517,6 +528,7 @@ export interface FileRouteTypes {
     | '/admin/ai'
     | '/admin/billing'
     | '/admin/certifications'
+    | '/admin/documents'
     | '/admin/domains'
     | '/admin/exams'
     | '/admin/import'
@@ -564,6 +576,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/ai'
     | '/_authenticated/_admin/admin/billing'
     | '/_authenticated/_admin/admin/certifications'
+    | '/_authenticated/_admin/admin/documents'
     | '/_authenticated/_admin/admin/domains'
     | '/_authenticated/_admin/admin/exams'
     | '/_authenticated/_admin/admin/import'
@@ -827,6 +840,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminCertificationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/documents': {
+      id: '/_authenticated/_admin/admin/documents'
+      path: '/admin/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/domains': {
       id: '/_authenticated/_admin/admin/domains'
       path: '/admin/domains'
@@ -940,6 +960,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminAiRoute: typeof AuthenticatedAdminAdminAiRouteWithChildren
   AuthenticatedAdminAdminBillingRoute: typeof AuthenticatedAdminAdminBillingRoute
   AuthenticatedAdminAdminCertificationsRoute: typeof AuthenticatedAdminAdminCertificationsRoute
+  AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
   AuthenticatedAdminAdminDomainsRoute: typeof AuthenticatedAdminAdminDomainsRoute
   AuthenticatedAdminAdminExamsRoute: typeof AuthenticatedAdminAdminExamsRoute
   AuthenticatedAdminAdminImportRoute: typeof AuthenticatedAdminAdminImportRoute
@@ -957,6 +978,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminBillingRoute: AuthenticatedAdminAdminBillingRoute,
   AuthenticatedAdminAdminCertificationsRoute:
     AuthenticatedAdminAdminCertificationsRoute,
+  AuthenticatedAdminAdminDocumentsRoute: AuthenticatedAdminAdminDocumentsRoute,
   AuthenticatedAdminAdminDomainsRoute: AuthenticatedAdminAdminDomainsRoute,
   AuthenticatedAdminAdminExamsRoute: AuthenticatedAdminAdminExamsRoute,
   AuthenticatedAdminAdminImportRoute: AuthenticatedAdminAdminImportRoute,

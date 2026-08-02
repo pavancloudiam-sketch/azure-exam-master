@@ -59,12 +59,14 @@ function AttemptsPage() {
     >
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_14rem]">
         <TextField
+          id="attempt-search"
           label="Search by exam"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Exam title"
         />
         <SelectField
+          id="attempt-status"
           label="Status"
           value={status}
           onValueChange={setStatus}
