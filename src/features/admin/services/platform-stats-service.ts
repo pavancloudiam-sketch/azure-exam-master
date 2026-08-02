@@ -11,9 +11,7 @@ export type PlatformStats = {
 
 async function countOf(
   table: "certifications" | "exams" | "questions" | "profiles" | "attempts",
-  apply?: (query: ReturnType<typeof supabase.from>) => unknown,
 ): Promise<number> {
-  void apply;
   const { count, error } = await supabase.from(table).select("id", { count: "exact", head: true });
   if (error) throw error;
   return count ?? 0;
