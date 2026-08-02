@@ -16,7 +16,13 @@ export type AutosavePayload = {
   questionId: string;
   selected: string[];
   markedForReview: boolean;
+  /**
+   * `yes_no` questions only: the explicit Yes/No per statement. Carried so a
+   * queued edit restores the same UI state after a refresh. Never scored.
+   */
+  statementResponses?: Record<string, "yes" | "no">;
 };
+
 
 export type QueuedSave = AutosavePayload & {
   /** Local wall-clock time of the edit — used for conflict detection. */
@@ -245,7 +251,9 @@ export class AutosaveQueue {
             questionId: item.questionId,
             selected: item.selected,
             markedForReview: item.markedForReview,
+            ...(item.statementResponses ? { statementResponses: item.statementResponses } : {}),
           });
+
           // The item may have been superseded while in flight; only drop it
           // when it is still the same edit.
           if (this.items[0] === item) this.items.shift();

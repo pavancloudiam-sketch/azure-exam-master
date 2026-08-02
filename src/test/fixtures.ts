@@ -12,6 +12,8 @@ export function makeExamQuestion(overrides: Partial<ExamQuestionView> = {}): Exa
     scenario: null,
     question_type: "single_choice",
     points: 1,
+    case_study_id: null,
+
     options: [
       { id: "o1", label: "A", content: "Conditional Access", sort_order: 1 },
       { id: "o2", label: "B", content: "Access reviews", sort_order: 2 },

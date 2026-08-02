@@ -1,14 +1,13 @@
 import * as React from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, Clock, FileQuestion, PlayCircle, Target } from "lucide-react";
+import { Bell, Clock, FileQuestion, Target, Timer } from "lucide-react";
 
 import { PageShell } from "@/features/shared/components/PageShell";
 import {
   EmptyState,
   ErrorState,
   LoadingBlock,
-  PrimaryButton,
   SecondaryButton,
   SelectField,
   StatusBadge,
@@ -16,8 +15,15 @@ import {
   notify,
 } from "@/features/shared/components/ui";
 import { listPublishedExams } from "@/features/exams/services/exam-service";
-import type { AttemptMode, Exam } from "@/features/exams/types";
-import { startAttempt } from "@/features/attempts/services/attempt-service";
+import {
+  ATTEMPT_MODE_DESCRIPTIONS,
+  ATTEMPT_MODE_LABELS,
+  ATTEMPT_MODE_RULES,
+  SELECTABLE_ATTEMPT_MODES,
+  isTimedMode,
+  type AttemptMode,
+  type Exam,
+} from "@/features/exams/types";
 import { requestExamReminder } from "@/features/billing/services/billing-service";
 
 export const Route = createFileRoute("/_authenticated/exams")({
@@ -26,39 +32,79 @@ export const Route = createFileRoute("/_authenticated/exams")({
       { title: "Practice exams — AskMeExam" },
       {
         name: "description",
-        content: "Start a timed or practice Microsoft Entra ID exam session.",
+        content: "Start a realistic mock, practice, skill-area or revision Microsoft Entra ID exam session.",
       },
       { property: "og:title", content: "Practice exams — AskMeExam" },
-      { property: "og:description", content: "Start a timed or practice exam session." },
+      { property: "og:description", content: "Choose a realistic mock, practice, skill-area or revision session." },
       { name: "robots", content: "noindex" },
     ],
   }),
   component: ExamsPage,
 });
 
+/** One selectable mode inside an exam card. Links to the instruction gate. */
+function ModeChoice({ exam, mode }: { exam: Exam; mode: AttemptMode }) {
+  const rules = ATTEMPT_MODE_RULES[mode];
+  const timed = isTimedMode(mode);
+  return (
+    <li className="rounded-lg border border-border bg-background p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="text-sm font-semibold">{ATTEMPT_MODE_LABELS[mode]}</h3>
+        <StatusBadge tone={timed ? "warning" : "neutral"}>
+          {timed ? (
+            <>
+              <Timer className="mr-1 size-3" aria-hidden="true" /> Timed
+            </>
+          ) : (
+            "Untimed"
+          )}
+        </StatusBadge>
+      </div>
+      <p className="mt-1 text-sm text-muted-foreground">{ATTEMPT_MODE_DESCRIPTIONS[mode]}</p>
+      <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
+        <div className="flex gap-2">
+          <dt className="min-w-24 font-medium text-foreground">Timer</dt>
+          <dd>{rules.timer}</dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="min-w-24 font-medium text-foreground">Questions</dt>
+          <dd>{rules.questions}</dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="min-w-24 font-medium text-foreground">Explanations</dt>
+          <dd>{rules.explanations}</dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="min-w-24 font-medium text-foreground">Repeats</dt>
+          <dd>{rules.repeats}</dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="min-w-24 font-medium text-foreground">Skill areas</dt>
+          <dd>{rules.domainFilter}</dd>
+        </div>
+      </dl>
+      <Link
+        to="/exams/$examId/start"
+        params={{ examId: exam.id }}
+        search={{ mode }}
+        className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        Review instructions
+      </Link>
+    </li>
+  );
+}
+
 function ExamsPage() {
-  const [starting, setStarting] = React.useState<string | null>(null);
   const [reminding, setReminding] = React.useState<string | null>(null);
   const [search, setSearch] = React.useState("");
   const [mode, setMode] = React.useState("all");
-  const navigate = useNavigate();
 
   const { data: exams, error, isLoading } = useQuery({
     queryKey: ["published-exams"],
     queryFn: listPublishedExams,
     staleTime: 60_000,
   });
-
-  async function begin(exam: Exam, attemptMode: AttemptMode) {
-    setStarting(`${exam.id}-${attemptMode}`);
-    try {
-      const attempt = await startAttempt(exam, attemptMode);
-      void navigate({ to: "/attempt/$attemptId", params: { attemptId: attempt.id } });
-    } catch (cause) {
-      notify.error(cause instanceof Error ? cause.message : "Could not start the exam.");
-      setStarting(null);
-    }
-  }
 
   /** Queues a study reminder for tomorrow; repeats are de-duplicated server-side. */
   async function remindMe(exam: Exam) {
@@ -90,7 +136,7 @@ function ExamsPage() {
   return (
     <PageShell
       title="Practice exams"
-      description="Choose timed mode to work against the clock, or practice mode for an untimed run. Answers and explanations stay hidden until you submit."
+      description="Pick an exam, then choose how you want to sit it. Every mode uses the same question bank; only the timing, length and question selection change. Answers and explanations stay hidden until you submit."
     >
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_14rem]">
         <TextField
@@ -131,11 +177,11 @@ function ExamsPage() {
             }
           />
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-6">
             {visible.map((exam) => (
               <article
                 key={exam.id}
-                className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-card"
+                className="rounded-xl border border-border bg-card p-6 shadow-card"
               >
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <div className="min-w-0">
@@ -161,29 +207,22 @@ function ExamsPage() {
                   <div className="flex items-center gap-2">
                     <Target className="size-4" aria-hidden="true" />
                     <dt className="sr-only">Passing score</dt>
-                    <dd>Pass at {exam.passing_score}%</dd>
+                    <dd>Pass at {exam.passing_score}</dd>
                   </div>
                 </dl>
 
-                <div className="mt-auto flex flex-wrap gap-3 pt-6">
-                  <PrimaryButton
-                    onClick={() => void begin(exam, "timed")}
-                    loading={starting === `${exam.id}-timed`}
-                    disabled={!exam.time_limit_minutes}
-                    title={
-                      exam.time_limit_minutes ? undefined : "This exam has no time limit configured"
-                    }
-                  >
-                    <PlayCircle aria-hidden="true" /> Start timed
-                  </PrimaryButton>
-                  <SecondaryButton
-                    onClick={() => void begin(exam, "practice")}
-                    loading={starting === `${exam.id}-practice`}
-                  >
-                    Start practice
-                  </SecondaryButton>
+                <h3 className="mt-6 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Choose a mode
+                </h3>
+                <ul className="mt-3 grid gap-4 md:grid-cols-2">
+                  {SELECTABLE_ATTEMPT_MODES.map((selectable) => (
+                    <ModeChoice key={selectable} exam={exam} mode={selectable} />
+                  ))}
+                </ul>
+
+                <div className="mt-5">
                   <SecondaryButton onClick={() => void remindMe(exam)} loading={reminding === exam.id}>
-                    <Bell aria-hidden="true" /> Remind me
+                    <Bell aria-hidden="true" /> Remind me tomorrow
                   </SecondaryButton>
                 </div>
               </article>

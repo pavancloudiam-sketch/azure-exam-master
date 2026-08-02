@@ -57,6 +57,7 @@ import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminAdminStudentsRouteImport } from './routes/_authenticated/_admin/admin/students'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
 import { Route as AuthenticatedAdminInternalDesignSystemRouteImport } from './routes/_authenticated/_admin/internal.design-system'
+import { Route as AuthenticatedExamsExamIdStartRouteImport } from './routes/_authenticated/exams_.$examId.start'
 import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
 import { Route as ApiPublicV1MembersRouteImport } from './routes/api/public/v1/members'
 import { Route as ApiPublicV1OrganizationRouteImport } from './routes/api/public/v1/organization'
@@ -324,6 +325,12 @@ const AuthenticatedAdminInternalDesignSystemRoute =
     path: '/internal/design-system',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedExamsExamIdStartRoute =
+  AuthenticatedExamsExamIdStartRouteImport.update({
+    id: '/exams_/$examId/start',
+    path: '/exams/$examId/start',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicHooksQueueWorkerRoute =
   ApiPublicHooksQueueWorkerRouteImport.update({
     id: '/api/public/hooks/queue-worker',
@@ -393,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/exams/$examId/start': typeof AuthenticatedExamsExamIdStartRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
@@ -445,6 +453,7 @@ export interface FileRoutesByTo {
   '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/exams/$examId/start': typeof AuthenticatedExamsExamIdStartRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
@@ -500,6 +509,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/_authenticated/_admin/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/_authenticated/exams_/$examId/start': typeof AuthenticatedExamsExamIdStartRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
@@ -554,6 +564,7 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
+    | '/exams/$examId/start'
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
@@ -606,6 +617,7 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
+    | '/exams/$examId/start'
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
@@ -660,6 +672,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/students'
     | '/_authenticated/_admin/admin/topics'
     | '/_authenticated/_admin/internal/design-system'
+    | '/_authenticated/exams_/$examId/start'
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
@@ -1027,6 +1040,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminInternalDesignSystemRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/exams_/$examId/start': {
+      id: '/_authenticated/exams_/$examId/start'
+      path: '/exams/$examId/start'
+      fullPath: '/exams/$examId/start'
+      preLoaderRoute: typeof AuthenticatedExamsExamIdStartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/hooks/queue-worker': {
       id: '/api/public/hooks/queue-worker'
       path: '/api/public/hooks/queue-worker'
@@ -1148,6 +1168,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedReviewAttemptIdRoute: typeof AuthenticatedReviewAttemptIdRoute
+  AuthenticatedExamsExamIdStartRoute: typeof AuthenticatedExamsExamIdStartRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1166,6 +1187,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedReviewAttemptIdRoute: AuthenticatedReviewAttemptIdRoute,
+  AuthenticatedExamsExamIdStartRoute: AuthenticatedExamsExamIdStartRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
