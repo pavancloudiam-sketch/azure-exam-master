@@ -6,6 +6,7 @@ import type {
   AttemptSummary,
   ExamOption,
   ExamQuestionView,
+  AttemptWithExam,
 } from "../types";
 
 /**
