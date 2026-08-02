@@ -106,7 +106,7 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
 
     const { data: completed, error: completeError } = await supabaseAdmin.rpc(
       "complete_email_job",
-      { _id: job.id, _error: failure },
+      { _id: job.id, _error: failure ?? undefined },
     );
     if (completeError) throw completeError;
     const status = (completed as { status?: string } | null)?.status;
@@ -154,8 +154,8 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
       {
         _delivery_id: job.delivery_id,
         _signature: signature,
-        _response_status: responseStatus,
-        _error: failure,
+        _response_status: responseStatus ?? undefined,
+        _error: failure ?? undefined,
       },
     );
     if (completeError) throw completeError;
