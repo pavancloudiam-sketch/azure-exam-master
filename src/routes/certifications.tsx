@@ -84,8 +84,9 @@ function CertificationsPage() {
     });
   }, [certifications, provider, q, status]);
 
-  const setSearch = (patch: Partial<{ q: string; status: StatusFilter; provider: string }>) =>
-    void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  type CertSearch = { q: string; status: StatusFilter; provider: string };
+  const setSearch = (patch: Partial<CertSearch>) =>
+    void navigate({ search: (prev: CertSearch) => ({ ...prev, ...patch }), replace: true });
 
   return (
     <PageShell
