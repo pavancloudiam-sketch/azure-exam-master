@@ -116,7 +116,7 @@ export type NotificationRecord = {
   template: string;
   subject: string;
   body: string;
-  status: "queued" | "sent" | "failed" | "cancelled";
+  status: "queued" | "sent" | "failed" | "cancelled" | "dead_letter";
   attempts: number;
   last_error: string | null;
   scheduled_for: string;
