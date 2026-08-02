@@ -15,6 +15,8 @@ type RazorpayEntity = {
   error_code?: string;
   error_description?: string;
   method?: string;
+  amount?: number;
+  currency?: string;
   notes?: Record<string, string>;
 };
 
@@ -33,7 +35,15 @@ function extract(payload: Record<string, unknown>) {
   const entity = payment ?? link ?? qr;
   const orderId =
     payment?.notes?.["order_id"] ?? link?.notes?.["order_id"] ?? qr?.notes?.["order_id"] ?? null;
-  return { entity, orderId, reference: payment?.id ?? link?.id ?? qr?.id ?? null };
+  return {
+    entity,
+    orderId,
+    reference: payment?.id ?? link?.id ?? qr?.id ?? null,
+    // Amount/currency as reported by the provider. The database refuses to
+    // settle when these disagree with the server-calculated order total.
+    amountMinor: payment?.amount ?? link?.amount ?? qr?.amount ?? null,
+    currency: payment?.currency ?? link?.currency ?? qr?.currency ?? null,
+  };
 }
 
 export const Route = createFileRoute("/api/public/webhooks/razorpay")({
