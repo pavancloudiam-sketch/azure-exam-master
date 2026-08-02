@@ -16,7 +16,7 @@ vi.mock("@/features/results/services/result-service", () => ({
   getAttemptResult: (attemptId: string) => getAttemptResult(attemptId),
 }));
 
-const notifyResultAvailable = vi.fn(() => Promise.resolve());
+const notifyResultAvailable = vi.fn((_attemptId: string) => Promise.resolve());
 vi.mock("@/features/billing/services/billing-service", () => ({
   notifyResultAvailable: (attemptId: string) => notifyResultAvailable(attemptId),
 }));

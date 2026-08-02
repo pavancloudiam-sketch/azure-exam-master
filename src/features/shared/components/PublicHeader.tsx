@@ -91,7 +91,7 @@ export function PublicHeader() {
           </Link>
           <Link
             to="/auth"
-            search={{ mode: "signup" }}
+            search={{ mode: "register" }}
             className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Create account
