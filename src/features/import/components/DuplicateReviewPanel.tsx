@@ -246,6 +246,53 @@ export function DuplicateReviewPanel({ batch }: { batch: ImportBatch }) {
           emptyMessage="No staged rows in this batch."
         />
       )}
+
+      <div className="rounded-md border border-border bg-surface p-4">
+        <h3 className="text-sm font-semibold">Commit to the question bank</h3>
+        {isCommitted ? (
+          <StatusAlert tone="success" title="Import committed">
+            {batch.imported_rows} question{batch.imported_rows === 1 ? "" : "s"} created
+            {batch.failed_rows > 0 ? `, ${batch.failed_rows} invalid row(s) skipped` : ""}
+            {batch.committed_at ? ` on ${new Date(batch.committed_at).toLocaleString()}` : ""}.
+          </StatusAlert>
+        ) : (
+          <>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Only the {validRows.length} valid row{validRows.length === 1 ? "" : "s"} will be imported
+              {invalidRows > 0 ? `; ${invalidRows} row(s) with errors are skipped` : ""}. The import runs as a single
+              transaction — if any row fails, nothing is created.
+            </p>
+            {!batch.attested_at ? (
+              <p className="mt-2 text-sm text-destructive">
+                The originality attestation must be recorded before this batch can be committed.
+              </p>
+            ) : null}
+            {unresolved > 0 ? (
+              <p className="mt-2 text-sm text-destructive">
+                Resolve {unresolved} flagged duplicate row{unresolved === 1 ? "" : "s"} first.
+              </p>
+            ) : null}
+            <div className="mt-4">
+              <PrimaryButton
+                type="button"
+                onClick={() => setConfirmCommit(true)}
+                disabled={!canCommit || commit.isPending}
+              >
+                {commit.isPending ? "Committing…" : "Commit import"}
+              </PrimaryButton>
+            </div>
+          </>
+        )}
+      </div>
+
+      <ConfirmDialog
+        open={confirmCommit}
+        title="Commit this import?"
+        description={`${validRows.length} question${validRows.length === 1 ? "" : "s"} will be created in the question bank from "${batch.filename}". This cannot be undone from here.`}
+        confirmLabel="Commit import"
+        onConfirm={() => commit.mutate()}
+        onOpenChange={(open) => !open && setConfirmCommit(false)}
+      />
     </div>
   );
 }
