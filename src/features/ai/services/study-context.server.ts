@@ -185,6 +185,19 @@ export function renderStudyContext(context: StudyContext): string {
       : "Average score: unavailable",
   ];
 
+  if (context.attemptTrend.length > 0) {
+    lines.push(
+      "Submitted attempt scores, oldest first (use these for trend analysis; fewer than three means no trend can be claimed):",
+      ...context.attemptTrend.map(
+        (attempt, index) =>
+          `- Attempt ${index + 1}${attempt.submittedAt ? ` (${attempt.submittedAt.slice(0, 10)})` : ""}: ${
+            attempt.percentage === null ? "score unavailable" : `${Math.round(attempt.percentage)}%`
+          }`,
+      ),
+    );
+  }
+
+
   if (context.domains.length > 0) {
     lines.push(
       "Per-domain accuracy (weakest first):",
