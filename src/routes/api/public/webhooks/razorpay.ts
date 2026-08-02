@@ -82,7 +82,7 @@ export const Route = createFileRoute("/api/public/webhooks/razorpay")({
           {
             _event_id: eventId,
             _event_type: eventType,
-            _order_id: orderId,
+            _order_id: orderId as unknown as string,
             _payload: trimmed,
             _provider: "razorpay",
           },
