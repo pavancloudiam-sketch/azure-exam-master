@@ -251,7 +251,9 @@ export class AutosaveQueue {
             questionId: item.questionId,
             selected: item.selected,
             markedForReview: item.markedForReview,
+            ...(item.statementResponses ? { statementResponses: item.statementResponses } : {}),
           });
+
           // The item may have been superseded while in flight; only drop it
           // when it is still the same edit.
           if (this.items[0] === item) this.items.shift();
