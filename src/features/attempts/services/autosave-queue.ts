@@ -16,7 +16,13 @@ export type AutosavePayload = {
   questionId: string;
   selected: string[];
   markedForReview: boolean;
+  /**
+   * `yes_no` questions only: the explicit Yes/No per statement. Carried so a
+   * queued edit restores the same UI state after a refresh. Never scored.
+   */
+  statementResponses?: Record<string, "yes" | "no">;
 };
+
 
 export type QueuedSave = AutosavePayload & {
   /** Local wall-clock time of the edit — used for conflict detection. */
