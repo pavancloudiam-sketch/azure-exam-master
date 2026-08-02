@@ -84,7 +84,7 @@ function AboutPage() {
             Create a free account
           </Link>
           <Link
-            to="/certifications" search={{}}
+            to="/certifications" search={{ q: "", status: "all" as const, provider: "all" }}
             className="inline-flex min-h-11 items-center rounded-md border border-border bg-surface px-5 text-sm font-medium text-primary transition-colors hover:bg-muted"
           >
             Browse certifications
