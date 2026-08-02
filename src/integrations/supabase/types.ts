@@ -3391,6 +3391,25 @@ export type Database = {
           theme_mode: string
         }[]
       }
+      get_public_certifications: {
+        Args: never
+        Returns: {
+          allow_new_attempts: boolean
+          code: string
+          description: string
+          domains: Json
+          effective_at: string
+          exam_code: string
+          exam_count: number
+          id: string
+          lifecycle_status: string
+          name: string
+          provider: string
+          retired_at: string
+          topic_count: number
+          version: string
+        }[]
+      }
       get_question_explanations: {
         Args: { _question_ids: string[] }
         Returns: {
