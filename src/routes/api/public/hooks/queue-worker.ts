@@ -39,28 +39,41 @@ export const Route = createFileRoute("/api/public/hooks/queue-worker")({
           });
         }
 
+        // One correlation id per cron tick, echoed back so an external
+        // scheduler's log line can be joined to the server's.
+        const runId =
+          request.headers.get("x-request-id") ??
+          globalThis.crypto?.randomUUID?.() ??
+          String(Date.now());
+
         try {
           const { runQueueWorker } = await import(
             "@/features/queue/services/queue-worker.server"
           );
-          const summary = await runQueueWorker(10);
-          return new Response(JSON.stringify({ status: "ok", ...summary }), {
-            headers: { "content-type": "application/json", "cache-control": "no-store" },
+          const summary = await runQueueWorker(10, runId);
+          return new Response(JSON.stringify({ status: "ok", run_id: runId, ...summary }), {
+            headers: {
+              "content-type": "application/json",
+              "cache-control": "no-store",
+              "x-request-id": runId,
+            },
           });
         } catch (cause) {
-          console.error(
-            JSON.stringify({
-              timestamp: new Date().toISOString(),
-              severity: "error",
-              code: "server.unexpected_error",
-              message: "Queue worker run failed",
-              source: "server",
-              context: { error_name: (cause as Error)?.name ?? "Error" },
-            }),
-          );
-          return new Response(JSON.stringify({ status: "error" }), {
+          // Cron failure alert: the whole tick died, so no one is watching.
+          const { raiseOpsAlert } = await import("@/features/observability/monitoring.server");
+          await raiseOpsAlert({
+            code: "cron.run_failed",
+            message: "Queue worker cron run failed",
+            correlationId: runId,
+            cause,
+          });
+          return new Response(JSON.stringify({ status: "error", run_id: runId }), {
             status: 500,
-            headers: { "content-type": "application/json", "cache-control": "no-store" },
+            headers: {
+              "content-type": "application/json",
+              "cache-control": "no-store",
+              "x-request-id": runId,
+            },
           });
         }
       },
