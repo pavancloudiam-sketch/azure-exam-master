@@ -24,6 +24,14 @@ export const EVENT_CODES = [
   "ui.unhandled_error",
   "server.unexpected_error",
   "health.check_failed",
+  // Background / monitoring events. These are server-only: the telemetry
+  // endpoint accepts them from the browser too, but nothing client-side emits
+  // them, and they carry no payload beyond counters and error names.
+  "queue.run_failed",
+  "queue.jobs_dead_lettered",
+  "cron.run_failed",
+  "retention.run_failed",
+  "monitor.alert",
 ] as const;
 
 export type EventCode = (typeof EVENT_CODES)[number];
