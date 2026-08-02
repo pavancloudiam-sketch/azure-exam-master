@@ -39,8 +39,10 @@ describe("SubmitReviewDialog", () => {
     expect(
       screen.getByText(/3 questions still unanswered — unanswered questions score zero\./),
     ).toBeInTheDocument();
+  });
 
-    cleanupAndRender({ unanswered: 1 });
+  it("uses the singular form for one unanswered question", () => {
+    setup({ answered: 9, unanswered: 1 });
     expect(screen.getByText(/1 question still unanswered/)).toBeInTheDocument();
   });
 
@@ -65,20 +67,3 @@ describe("SubmitReviewDialog", () => {
   });
 });
 
-// Small helper so a single test can re-render with different props.
-function cleanupAndRender(props: Partial<React.ComponentProps<typeof SubmitReviewDialog>>) {
-  document.body.innerHTML = "";
-  render(
-    <SubmitReviewDialog
-      open
-      onOpenChange={vi.fn()}
-      total={10}
-      answered={9}
-      unanswered={1}
-      marked={0}
-      submitting={false}
-      onConfirm={vi.fn()}
-      {...props}
-    />,
-  );
-}
