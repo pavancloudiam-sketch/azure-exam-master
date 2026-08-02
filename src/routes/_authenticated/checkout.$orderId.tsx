@@ -38,10 +38,10 @@ export const Route = createFileRoute("/_authenticated/checkout/$orderId")({
   component: CheckoutPage,
 });
 
-const STATUS_LABELS: Record<string, { label: string; tone: "info" | "success" | "danger" | "warning" | "neutral" }> = {
+const STATUS_LABELS: Record<string, { label: string; tone: "info" | "success" | "error" | "warning" | "neutral" }> = {
   pending_payment: { label: "Waiting for payment", tone: "info" },
   paid: { label: "Payment successful", tone: "success" },
-  failed: { label: "Payment failed", tone: "danger" },
+  failed: { label: "Payment failed", tone: "error" },
   expired: { label: "Payment expired", tone: "warning" },
   cancelled: { label: "Payment cancelled", tone: "neutral" },
 };
