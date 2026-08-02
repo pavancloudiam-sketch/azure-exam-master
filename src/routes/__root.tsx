@@ -152,15 +152,14 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
       <TenantBrandingProvider>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <SiteHeader />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <AppErrorBoundary boundary="root_outlet">
-          <Outlet />
-        </AppErrorBoundary>
-        <SiteFooter />
-        <Toaster richColors closeButton position="top-right" />
-      </div>
+          <AppChrome>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <AppErrorBoundary boundary="root_outlet">
+              <Outlet />
+            </AppErrorBoundary>
+          </AppChrome>
+          <Toaster richColors closeButton position="top-right" />
+
       </TenantBrandingProvider>
       </AuthProvider>
     </QueryClientProvider>
