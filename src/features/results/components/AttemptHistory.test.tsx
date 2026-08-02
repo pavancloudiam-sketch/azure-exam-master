@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, ...rest }: { children: React.ReactNode }) => <a {...rest}>{children}</a>,
+  Link: ({ children, to }: { children: React.ReactNode; to?: string }) => (
+    <a href={to}>{children}</a>
+  ),
 }));
 
 const listMyAttempts = vi.fn();

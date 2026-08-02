@@ -3,7 +3,9 @@ import { render, screen } from "@testing-library/react";
 
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (options: Record<string, unknown>) => ({ options }),
-  Link: ({ children, ...rest }: { children: React.ReactNode }) => <a {...rest}>{children}</a>,
+  Link: ({ children, to }: { children: React.ReactNode; to?: string }) => (
+    <a href={to}>{children}</a>
+  ),
 }));
 
 const auth = vi.hoisted(() => ({ current: { user: { email: "s@example.com" }, isAdmin: false } }));

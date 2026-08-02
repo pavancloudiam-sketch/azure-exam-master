@@ -13,7 +13,7 @@ vi.mock("../services/attempt-service", () => ({
   getAttemptTimeRemaining: vi.fn().mockResolvedValue(600),
 }));
 
-const notify = { success: vi.fn(), error: vi.fn() };
+const notify = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }));
 vi.mock("@/features/shared/components/ui", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/features/shared/components/ui")>();
   return { ...actual, notify };

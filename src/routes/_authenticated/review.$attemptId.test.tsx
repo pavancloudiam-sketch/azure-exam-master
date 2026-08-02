@@ -7,7 +7,9 @@ vi.mock("@tanstack/react-router", () => ({
     options,
     useParams: () => ({ attemptId: "att-1" }),
   }),
-  Link: ({ children, ...rest }: { children: React.ReactNode }) => <a {...rest}>{children}</a>,
+  Link: ({ children, to }: { children: React.ReactNode; to?: string }) => (
+    <a href={to}>{children}</a>
+  ),
 }));
 
 const reviewState = vi.hoisted(() => ({ current: null as unknown }));

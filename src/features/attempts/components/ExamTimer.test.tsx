@@ -86,7 +86,7 @@ describe("ExamTimer", () => {
 
     expect(screen.getByRole("timer")).toHaveAttribute("aria-live", "off");
     await advance(1);
-    expect(screen.getByText("60 seconds remaining")).toBeInTheDocument();
+    expect(screen.getByText("1 minutes remaining")).toBeInTheDocument();
   });
 
   it("fires onExpire exactly once when the clock reaches zero", async () => {
