@@ -211,6 +211,13 @@ Cover at most six questions, most recent first, and finish with the single misco
 Rank the weakest three, give the accuracy you used for each, explain what that domain covers, and say which two topics inside it to attack first.
 State plainly when a domain has too few answered questions to judge, and never present a small sample as a conclusion.`,
 
+  progress_report: `Task: report on how the student is progressing over time.
+Use the attempt history (scores in date order), the overall average and the per-domain accuracy in the context.
+Return: ### Where you stand (one short paragraph naming the numbers you used), ### Trend (improving, flat or declining, with the scores that show it), ### What is driving it (the domains pulling the score up and down), ### Do this next (three concrete actions).
+Say explicitly when there are too few attempts to call a trend — with fewer than three submitted attempts, describe the position and refuse to claim a direction.
+This is educational guidance from practice results only; never present it as a prediction of passing the real exam.`,
+
+
   study_plan: `Task: build a personalised study plan.
 Use the student's per-domain accuracy and any target date or weekly hours supplied in the input.
 Return: a one-paragraph summary, then a markdown table with columns Week | Focus | Practice | Checkpoint, then a short "How you'll know you're ready" list.
