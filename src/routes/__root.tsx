@@ -11,8 +11,8 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { SiteHeader } from "../features/shared/components/SiteHeader";
-import { SiteFooter } from "../features/shared/components/SiteFooter";
+import { AppChrome } from "../features/shared/components/AppChrome";
+
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/features/auth/hooks/use-auth";
 import { TenantBrandingProvider } from "@/features/organizations/hooks/use-tenant-branding";
@@ -152,15 +152,14 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
       <TenantBrandingProvider>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <SiteHeader />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <AppErrorBoundary boundary="root_outlet">
-          <Outlet />
-        </AppErrorBoundary>
-        <SiteFooter />
-        <Toaster richColors closeButton position="top-right" />
-      </div>
+          <AppChrome>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <AppErrorBoundary boundary="root_outlet">
+              <Outlet />
+            </AppErrorBoundary>
+          </AppChrome>
+          <Toaster richColors closeButton position="top-right" />
+
       </TenantBrandingProvider>
       </AuthProvider>
     </QueryClientProvider>

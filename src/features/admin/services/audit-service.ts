@@ -12,7 +12,9 @@ export type AuditEntry = {
     | "import_batch"
     | "exam"
     | "application_settings"
-    | "user_role";
+    | "user_role"
+    | "document"
+    | "document_folder";
   entityId?: string;
   entityLabel: string;
   details?: Record<string, Json>;

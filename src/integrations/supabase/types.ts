@@ -815,6 +815,152 @@ export type Database = {
           },
         ]
       }
+      document_folders: {
+        Row: {
+          archived: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          archived: boolean
+          category: Database["public"]["Enums"]["document_category"]
+          certification_id: string | null
+          created_at: string
+          description: string | null
+          domain_id: string | null
+          exam_id: string | null
+          file_extension: string
+          folder_id: string | null
+          id: string
+          mime_type: string
+          original_filename: string
+          size_bytes: number
+          storage_path: string
+          tags: string[]
+          title: string
+          topic_id: string | null
+          updated_at: string
+          uploaded_by: string | null
+          visibility: Database["public"]["Enums"]["document_visibility"]
+        }
+        Insert: {
+          archived?: boolean
+          category?: Database["public"]["Enums"]["document_category"]
+          certification_id?: string | null
+          created_at?: string
+          description?: string | null
+          domain_id?: string | null
+          exam_id?: string | null
+          file_extension: string
+          folder_id?: string | null
+          id?: string
+          mime_type: string
+          original_filename: string
+          size_bytes: number
+          storage_path: string
+          tags?: string[]
+          title: string
+          topic_id?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          visibility?: Database["public"]["Enums"]["document_visibility"]
+        }
+        Update: {
+          archived?: boolean
+          category?: Database["public"]["Enums"]["document_category"]
+          certification_id?: string | null
+          created_at?: string
+          description?: string | null
+          domain_id?: string | null
+          exam_id?: string | null
+          file_extension?: string
+          folder_id?: string | null
+          id?: string
+          mime_type?: string
+          original_filename?: string
+          size_bytes?: number
+          storage_path?: string
+          tags?: string[]
+          title?: string
+          topic_id?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          visibility?: Database["public"]["Enums"]["document_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       domains: {
         Row: {
           certification_id: string
@@ -4175,6 +4321,19 @@ export type Database = {
     }
     Enums: {
       app_role: "student" | "admin"
+      document_category:
+        | "study_notes"
+        | "course_material"
+        | "revision_guide"
+        | "practice_material"
+        | "reference"
+        | "policy"
+        | "trainer_internal"
+      document_visibility:
+        | "admin_only"
+        | "trainer"
+        | "students"
+        | "exam_assigned"
       org_member_status: "invited" | "active" | "removed"
       org_role: "owner" | "admin" | "manager" | "member"
     }
@@ -4305,6 +4464,21 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["student", "admin"],
+      document_category: [
+        "study_notes",
+        "course_material",
+        "revision_guide",
+        "practice_material",
+        "reference",
+        "policy",
+        "trainer_internal",
+      ],
+      document_visibility: [
+        "admin_only",
+        "trainer",
+        "students",
+        "exam_assigned",
+      ],
       org_member_status: ["invited", "active", "removed"],
       org_role: ["owner", "admin", "manager", "member"],
     },

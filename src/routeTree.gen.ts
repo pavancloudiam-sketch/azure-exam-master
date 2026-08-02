@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -20,12 +21,16 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/_admin'
+import { Route as AuthenticatedAttemptsRouteImport } from './routes/_authenticated/attempts'
 import { Route as AuthenticatedBillingRouteImport } from './routes/_authenticated/billing'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
+import { Route as AuthenticatedHelpRouteImport } from './routes/_authenticated/help'
 import { Route as AuthenticatedInterviewRouteImport } from './routes/_authenticated/interview'
 import { Route as AuthenticatedOrganizationRouteImport } from './routes/_authenticated/organization'
 import { Route as AuthenticatedPrivacyRouteImport } from './routes/_authenticated/privacy'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
 import { Route as AuthenticatedStudyRouteImport } from './routes/_authenticated/study'
 import { Route as LegalDocSlugRouteImport } from './routes/legal/$docSlug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -38,8 +43,10 @@ import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin/index'
 import { Route as AuthenticatedAdminAdminAiRouteImport } from './routes/_authenticated/_admin/admin/ai'
+import { Route as AuthenticatedAdminAdminAuditRouteImport } from './routes/_authenticated/_admin/admin/audit'
 import { Route as AuthenticatedAdminAdminBillingRouteImport } from './routes/_authenticated/_admin/admin/billing'
 import { Route as AuthenticatedAdminAdminCertificationsRouteImport } from './routes/_authenticated/_admin/admin/certifications'
+import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin/documents'
 import { Route as AuthenticatedAdminAdminDomainsRouteImport } from './routes/_authenticated/_admin/admin/domains'
 import { Route as AuthenticatedAdminAdminExamsRouteImport } from './routes/_authenticated/_admin/admin/exams'
 import { Route as AuthenticatedAdminAdminImportRouteImport } from './routes/_authenticated/_admin/admin/import'
@@ -47,6 +54,7 @@ import { Route as AuthenticatedAdminAdminOrganizationsRouteImport } from './rout
 import { Route as AuthenticatedAdminAdminPrivacyRouteImport } from './routes/_authenticated/_admin/admin/privacy'
 import { Route as AuthenticatedAdminAdminQuestionsRouteImport } from './routes/_authenticated/_admin/admin/questions'
 import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_authenticated/_admin/admin/settings'
+import { Route as AuthenticatedAdminAdminStudentsRouteImport } from './routes/_authenticated/_admin/admin/students'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
 import { Route as AuthenticatedAdminInternalDesignSystemRouteImport } from './routes/_authenticated/_admin/internal.design-system'
 import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
@@ -61,6 +69,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -109,6 +122,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/_admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAttemptsRoute = AuthenticatedAttemptsRouteImport.update({
+  id: '/attempts',
+  path: '/attempts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedBillingRoute = AuthenticatedBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
@@ -122,6 +140,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedExamsRoute = AuthenticatedExamsRouteImport.update({
   id: '/exams',
   path: '/exams',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHelpRoute = AuthenticatedHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInterviewRoute = AuthenticatedInterviewRouteImport.update({
@@ -138,6 +161,16 @@ const AuthenticatedOrganizationRoute =
 const AuthenticatedPrivacyRoute = AuthenticatedPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedStudyRoute = AuthenticatedStudyRouteImport.update({
@@ -207,6 +240,12 @@ const AuthenticatedAdminAdminAiRoute =
     path: '/admin/ai',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminAuditRoute =
+  AuthenticatedAdminAdminAuditRouteImport.update({
+    id: '/admin/audit',
+    path: '/admin/audit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminBillingRoute =
   AuthenticatedAdminAdminBillingRouteImport.update({
     id: '/admin/billing',
@@ -217,6 +256,12 @@ const AuthenticatedAdminAdminCertificationsRoute =
   AuthenticatedAdminAdminCertificationsRouteImport.update({
     id: '/admin/certifications',
     path: '/admin/certifications',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAdminDocumentsRoute =
+  AuthenticatedAdminAdminDocumentsRouteImport.update({
+    id: '/admin/documents',
+    path: '/admin/documents',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAdminDomainsRoute =
@@ -261,6 +306,12 @@ const AuthenticatedAdminAdminSettingsRoute =
     path: '/admin/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminStudentsRoute =
+  AuthenticatedAdminAdminStudentsRouteImport.update({
+    id: '/admin/students',
+    path: '/admin/students',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminTopicsRoute =
   AuthenticatedAdminAdminTopicsRouteImport.update({
     id: '/admin/topics',
@@ -298,6 +349,7 @@ const AuthenticatedAdminAdminAiGeneratorRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -306,12 +358,16 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/attempts': typeof AuthenticatedAttemptsRoute
   '/billing': typeof AuthenticatedBillingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
+  '/help': typeof AuthenticatedHelpRoute
   '/interview': typeof AuthenticatedInterviewRoute
   '/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/privacy': typeof AuthenticatedPrivacyRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -323,8 +379,10 @@ export interface FileRoutesByFullPath {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -332,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -342,6 +401,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -350,12 +410,16 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/attempts': typeof AuthenticatedAttemptsRoute
   '/billing': typeof AuthenticatedBillingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
+  '/help': typeof AuthenticatedHelpRoute
   '/interview': typeof AuthenticatedInterviewRoute
   '/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/privacy': typeof AuthenticatedPrivacyRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -367,8 +431,10 @@ export interface FileRoutesByTo {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -376,6 +442,7 @@ export interface FileRoutesByTo {
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -388,6 +455,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -397,12 +465,16 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/_admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/attempts': typeof AuthenticatedAttemptsRoute
   '/_authenticated/billing': typeof AuthenticatedBillingRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
+  '/_authenticated/help': typeof AuthenticatedHelpRoute
   '/_authenticated/interview': typeof AuthenticatedInterviewRoute
   '/_authenticated/organization': typeof AuthenticatedOrganizationRouteWithChildren
   '/_authenticated/privacy': typeof AuthenticatedPrivacyRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/study': typeof AuthenticatedStudyRoute
   '/legal/$docSlug': typeof LegalDocSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -414,8 +486,10 @@ export interface FileRoutesById {
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/_authenticated/_admin/admin/ai': typeof AuthenticatedAdminAdminAiRouteWithChildren
+  '/_authenticated/_admin/admin/audit': typeof AuthenticatedAdminAdminAuditRoute
   '/_authenticated/_admin/admin/billing': typeof AuthenticatedAdminAdminBillingRoute
   '/_authenticated/_admin/admin/certifications': typeof AuthenticatedAdminAdminCertificationsRoute
+  '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/_authenticated/_admin/admin/domains': typeof AuthenticatedAdminAdminDomainsRoute
   '/_authenticated/_admin/admin/exams': typeof AuthenticatedAdminAdminExamsRoute
   '/_authenticated/_admin/admin/import': typeof AuthenticatedAdminAdminImportRoute
@@ -423,6 +497,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/_authenticated/_admin/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/_authenticated/_admin/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/_authenticated/_admin/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/_authenticated/_admin/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -435,6 +510,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/auth'
     | '/certifications'
     | '/forgot-password'
@@ -443,12 +519,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/attempts'
     | '/billing'
     | '/dashboard'
     | '/exams'
+    | '/help'
     | '/interview'
     | '/organization'
     | '/privacy'
+    | '/profile'
+    | '/resources'
     | '/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -460,8 +540,10 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/admin/ai'
+    | '/admin/audit'
     | '/admin/billing'
     | '/admin/certifications'
+    | '/admin/documents'
     | '/admin/domains'
     | '/admin/exams'
     | '/admin/import'
@@ -469,6 +551,7 @@ export interface FileRouteTypes {
     | '/admin/privacy'
     | '/admin/questions'
     | '/admin/settings'
+    | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -479,6 +562,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/auth'
     | '/certifications'
     | '/forgot-password'
@@ -487,12 +571,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/attempts'
     | '/billing'
     | '/dashboard'
     | '/exams'
+    | '/help'
     | '/interview'
     | '/organization'
     | '/privacy'
+    | '/profile'
+    | '/resources'
     | '/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -504,8 +592,10 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/admin/ai'
+    | '/admin/audit'
     | '/admin/billing'
     | '/admin/certifications'
+    | '/admin/documents'
     | '/admin/domains'
     | '/admin/exams'
     | '/admin/import'
@@ -513,6 +603,7 @@ export interface FileRouteTypes {
     | '/admin/privacy'
     | '/admin/questions'
     | '/admin/settings'
+    | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -524,6 +615,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/auth'
     | '/certifications'
     | '/forgot-password'
@@ -533,12 +625,16 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/_admin'
+    | '/_authenticated/attempts'
     | '/_authenticated/billing'
     | '/_authenticated/dashboard'
     | '/_authenticated/exams'
+    | '/_authenticated/help'
     | '/_authenticated/interview'
     | '/_authenticated/organization'
     | '/_authenticated/privacy'
+    | '/_authenticated/profile'
+    | '/_authenticated/resources'
     | '/_authenticated/study'
     | '/legal/$docSlug'
     | '/.lovable/oauth/consent'
@@ -550,8 +646,10 @@ export interface FileRouteTypes {
     | '/api/public/health'
     | '/api/public/telemetry'
     | '/_authenticated/_admin/admin/ai'
+    | '/_authenticated/_admin/admin/audit'
     | '/_authenticated/_admin/admin/billing'
     | '/_authenticated/_admin/admin/certifications'
+    | '/_authenticated/_admin/admin/documents'
     | '/_authenticated/_admin/admin/domains'
     | '/_authenticated/_admin/admin/exams'
     | '/_authenticated/_admin/admin/import'
@@ -559,6 +657,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/privacy'
     | '/_authenticated/_admin/admin/questions'
     | '/_authenticated/_admin/admin/settings'
+    | '/_authenticated/_admin/admin/students'
     | '/_authenticated/_admin/admin/topics'
     | '/_authenticated/_admin/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -571,6 +670,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   CertificationsRoute: typeof CertificationsRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -603,6 +703,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -668,6 +775,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/attempts': {
+      id: '/_authenticated/attempts'
+      path: '/attempts'
+      fullPath: '/attempts'
+      preLoaderRoute: typeof AuthenticatedAttemptsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/billing': {
       id: '/_authenticated/billing'
       path: '/billing'
@@ -689,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedExamsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/help': {
+      id: '/_authenticated/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof AuthenticatedHelpRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/interview': {
       id: '/_authenticated/interview'
       path: '/interview'
@@ -708,6 +829,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof AuthenticatedPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/resources': {
+      id: '/_authenticated/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof AuthenticatedResourcesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/study': {
@@ -794,6 +929,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminAiRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/audit': {
+      id: '/_authenticated/_admin/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/billing': {
       id: '/_authenticated/_admin/admin/billing'
       path: '/admin/billing'
@@ -806,6 +948,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/certifications'
       fullPath: '/admin/certifications'
       preLoaderRoute: typeof AuthenticatedAdminAdminCertificationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/admin/documents': {
+      id: '/_authenticated/_admin/admin/documents'
+      path: '/admin/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/_admin/admin/domains': {
@@ -855,6 +1004,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AuthenticatedAdminAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/admin/students': {
+      id: '/_authenticated/_admin/admin/students'
+      path: '/admin/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AuthenticatedAdminAdminStudentsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/_admin/admin/topics': {
@@ -919,8 +1075,10 @@ const AuthenticatedAdminAdminAiRouteWithChildren =
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminAiRoute: typeof AuthenticatedAdminAdminAiRouteWithChildren
+  AuthenticatedAdminAdminAuditRoute: typeof AuthenticatedAdminAdminAuditRoute
   AuthenticatedAdminAdminBillingRoute: typeof AuthenticatedAdminAdminBillingRoute
   AuthenticatedAdminAdminCertificationsRoute: typeof AuthenticatedAdminAdminCertificationsRoute
+  AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
   AuthenticatedAdminAdminDomainsRoute: typeof AuthenticatedAdminAdminDomainsRoute
   AuthenticatedAdminAdminExamsRoute: typeof AuthenticatedAdminAdminExamsRoute
   AuthenticatedAdminAdminImportRoute: typeof AuthenticatedAdminAdminImportRoute
@@ -928,6 +1086,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminPrivacyRoute: typeof AuthenticatedAdminAdminPrivacyRoute
   AuthenticatedAdminAdminQuestionsRoute: typeof AuthenticatedAdminAdminQuestionsRoute
   AuthenticatedAdminAdminSettingsRoute: typeof AuthenticatedAdminAdminSettingsRoute
+  AuthenticatedAdminAdminStudentsRoute: typeof AuthenticatedAdminAdminStudentsRoute
   AuthenticatedAdminAdminTopicsRoute: typeof AuthenticatedAdminAdminTopicsRoute
   AuthenticatedAdminInternalDesignSystemRoute: typeof AuthenticatedAdminInternalDesignSystemRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
@@ -935,9 +1094,11 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminAiRoute: AuthenticatedAdminAdminAiRouteWithChildren,
+  AuthenticatedAdminAdminAuditRoute: AuthenticatedAdminAdminAuditRoute,
   AuthenticatedAdminAdminBillingRoute: AuthenticatedAdminAdminBillingRoute,
   AuthenticatedAdminAdminCertificationsRoute:
     AuthenticatedAdminAdminCertificationsRoute,
+  AuthenticatedAdminAdminDocumentsRoute: AuthenticatedAdminAdminDocumentsRoute,
   AuthenticatedAdminAdminDomainsRoute: AuthenticatedAdminAdminDomainsRoute,
   AuthenticatedAdminAdminExamsRoute: AuthenticatedAdminAdminExamsRoute,
   AuthenticatedAdminAdminImportRoute: AuthenticatedAdminAdminImportRoute,
@@ -946,6 +1107,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminPrivacyRoute: AuthenticatedAdminAdminPrivacyRoute,
   AuthenticatedAdminAdminQuestionsRoute: AuthenticatedAdminAdminQuestionsRoute,
   AuthenticatedAdminAdminSettingsRoute: AuthenticatedAdminAdminSettingsRoute,
+  AuthenticatedAdminAdminStudentsRoute: AuthenticatedAdminAdminStudentsRoute,
   AuthenticatedAdminAdminTopicsRoute: AuthenticatedAdminAdminTopicsRoute,
   AuthenticatedAdminInternalDesignSystemRoute:
     AuthenticatedAdminInternalDesignSystemRoute,
@@ -972,12 +1134,16 @@ const AuthenticatedOrganizationRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAttemptsRoute: typeof AuthenticatedAttemptsRoute
   AuthenticatedBillingRoute: typeof AuthenticatedBillingRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
+  AuthenticatedHelpRoute: typeof AuthenticatedHelpRoute
   AuthenticatedInterviewRoute: typeof AuthenticatedInterviewRoute
   AuthenticatedOrganizationRoute: typeof AuthenticatedOrganizationRouteWithChildren
   AuthenticatedPrivacyRoute: typeof AuthenticatedPrivacyRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedStudyRoute: typeof AuthenticatedStudyRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
@@ -986,12 +1152,16 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAttemptsRoute: AuthenticatedAttemptsRoute,
   AuthenticatedBillingRoute: AuthenticatedBillingRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
+  AuthenticatedHelpRoute: AuthenticatedHelpRoute,
   AuthenticatedInterviewRoute: AuthenticatedInterviewRoute,
   AuthenticatedOrganizationRoute: AuthenticatedOrganizationRouteWithChildren,
   AuthenticatedPrivacyRoute: AuthenticatedPrivacyRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedStudyRoute: AuthenticatedStudyRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
@@ -1004,6 +1174,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   CertificationsRoute: CertificationsRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
