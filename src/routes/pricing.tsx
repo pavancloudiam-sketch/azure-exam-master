@@ -2,29 +2,24 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageShell } from "@/features/shared/components/PageShell";
-import {
-  ErrorState,
-  SkeletonList,
-  StatusAlert,
-  StatusBadge,
-  SurfaceCard,
-} from "@/features/shared/components/ui";
-import { listCatalog } from "@/features/billing/services/catalog-service";
-import { formatInr } from "@/features/billing/types";
+import { ErrorState, SkeletonList, StatusBadge, SurfaceCard } from "@/features/shared/components/ui";
+import { getPublicPricing } from "@/features/billing/services/pricing-service";
+import { PriceTag } from "@/features/billing/components/PriceTag";
+import { BuyNowButton } from "@/features/payments/components/BuyNowButton";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — AskMeExam Practice Plans" },
+      { title: "Pricing — Microsoft Entra ID Practice Exam Offer" },
       {
         name: "description",
         content:
-          "Planned AskMeExam pricing for Microsoft Entra ID practice: one-time exam access and monthly or annual plans in Indian rupees.",
+          "Launch offer: the AskMeExam Microsoft Entra ID realistic practice exam for ₹300 instead of ₹500, until 2 September 2026. Pay securely by UPI.",
       },
-      { property: "og:title", content: "Pricing — AskMeExam Practice Plans" },
+      { property: "og:title", content: "Pricing — Microsoft Entra ID Practice Exam Offer" },
       {
         property: "og:description",
-        content: "One-time exam access and subscription plans for Microsoft Entra ID practice.",
+        content: "Limited-time launch price on the realistic Microsoft Entra ID practice exam.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -33,30 +28,24 @@ export const Route = createFileRoute("/pricing")({
   component: PricingPage,
 });
 
-function intervalLabel(interval: "month" | "year" | null, count: number) {
-  if (!interval) return "one-time";
+function intervalLabel(interval: string | null, count: number) {
+  if (!interval) return "one-time payment";
   if (count === 1) return interval === "month" ? "per month" : "per year";
   return `every ${count} ${interval}s`;
 }
 
 function PricingPage() {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["catalog"],
-    queryFn: listCatalog,
+    queryKey: ["public-pricing"],
+    queryFn: getPublicPricing,
   });
 
   return (
     <PageShell
       title="Pricing"
-      description="Planned plans for the India launch. Prices are shown in Indian rupees and are indicative until payments are activated."
+      description="Prices are shown in Indian rupees and are calculated by our servers, including any live offer."
     >
-      <StatusAlert tone="info" title="Payments are not active yet">
-        You cannot buy access at the moment. Every practice exam currently available is free to
-        start from the exams page. Final pricing, taxes and invoicing depend on the launch
-        checklist items still awaiting professional confirmation.
-      </StatusAlert>
-
-      <div className="mt-6">
+      <div className="mt-2">
         {isLoading ? (
           <SkeletonList rows={3} />
         ) : error ? (
@@ -66,41 +55,37 @@ function PricingPage() {
             onRetry={() => void refetch()}
           />
         ) : (
-          <div className="grid gap-4 md:grid-cols-3">
-            {(data ?? []).map((product) => {
-              const price = product.prices[0];
-              return (
-                <SurfaceCard key={product.id}>
-                  <div className="flex items-start justify-between gap-3">
-                    <h2 className="text-base font-semibold">{product.name}</h2>
-                    <StatusBadge tone={product.product_type === "subscription" ? "info" : "neutral"}>
-                      {product.product_type === "subscription" ? "plan" : "one-time"}
-                    </StatusBadge>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
-                  <p className="mt-4 text-2xl font-semibold">
-                    {price ? formatInr(price.amount_minor) : "—"}
-                    <span className="ml-2 text-sm font-normal text-muted-foreground">
-                      {price ? intervalLabel(price.billing_interval, price.interval_count) : ""}
-                    </span>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {(data ?? []).map((product) => (
+              <SurfaceCard key={product.product_id}>
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="text-base font-semibold">{product.name}</h2>
+                  <StatusBadge tone={product.product_type === "subscription" ? "info" : "neutral"}>
+                    {product.product_type === "subscription" ? "plan" : "one-time"}
+                  </StatusBadge>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+                <div className="mt-4">
+                  <PriceTag pricing={product.pricing} />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {intervalLabel(product.billing_interval, product.interval_count)}
+                    {product.access_days ? ` · access for ${product.access_days} days` : ""}
                   </p>
-                  {product.access_days ? (
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Access for {product.access_days} days.
-                    </p>
-                  ) : null}
-                  <p className="mt-4 text-xs text-muted-foreground">
-                    Taxes, if applicable, are not included. GST treatment is pending confirmation.
-                  </p>
-                </SurfaceCard>
-              );
-            })}
+                </div>
+                <div className="mt-5">
+                  <BuyNowButton productId={product.product_id} className="w-full" />
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Pay by UPI. Access unlocks automatically once the payment is verified.
+                </p>
+              </SurfaceCard>
+            ))}
           </div>
         )}
       </div>
 
       <p className="mt-8 text-sm text-muted-foreground">
-        Purchases will be governed by the{" "}
+        Purchases are governed by the{" "}
         <Link to="/legal/$docSlug" params={{ docSlug: "terms" }} className="underline">
           Terms of Service
         </Link>
@@ -112,7 +97,7 @@ function PricingPage() {
         <Link to="/legal/$docSlug" params={{ docSlug: "refunds" }} className="underline">
           Refund Policy
         </Link>
-        , all of which are placeholder drafts today.
+        .
       </p>
     </PageShell>
   );
