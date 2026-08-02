@@ -9,6 +9,7 @@ import {
   EmptyState,
   ErrorState,
   LoadingBlock,
+  Modal,
   PrimaryButton,
   SecondaryButton,
   SelectField,
