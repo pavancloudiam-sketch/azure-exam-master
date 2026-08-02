@@ -15,6 +15,7 @@ const TONE: Record<NotificationRecord["status"], "success" | "warning" | "neutra
   queued: "warning",
   failed: "error",
   cancelled: "neutral",
+  dead_letter: "error",
 };
 
 /** Read-only view of messages queued for this student. */

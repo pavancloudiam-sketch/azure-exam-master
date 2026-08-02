@@ -54,22 +54,8 @@ export const sendTestWebhook = createServerFn({ method: "POST" })
       data: { message: "AskMeExam test event" },
     });
 
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-    const key = await crypto.subtle.importKey(
-      "raw",
-      new TextEncoder().encode(hook.secret),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"],
-    );
-    const mac = await crypto.subtle.sign(
-      "HMAC",
-      key,
-      new TextEncoder().encode(`${timestamp}.${body}`),
-    );
-    const signature = `t=${timestamp},v1=${Array.from(new Uint8Array(mac))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("")}`;
+    const { signWebhookBody, webhookHeaders } = await import("./webhook-signature");
+    const signature = await signWebhookBody(hook.secret, body);
 
     let status = "failed";
     let responseStatus: number | null = null;
@@ -77,12 +63,7 @@ export const sendTestWebhook = createServerFn({ method: "POST" })
     try {
       const response = await fetch(hook.target_url, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-askmeexam-signature": signature,
-          "x-askmeexam-event": "webhook.test",
-          "x-askmeexam-idempotency-key": idempotencyKey,
-        },
+        headers: webhookHeaders(signature, "webhook.test", idempotencyKey),
         body,
       });
       responseStatus = response.status;

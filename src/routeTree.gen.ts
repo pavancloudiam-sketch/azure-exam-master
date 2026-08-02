@@ -49,6 +49,7 @@ import { Route as AuthenticatedAdminAdminQuestionsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_authenticated/_admin/admin/settings'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
 import { Route as AuthenticatedAdminInternalDesignSystemRouteImport } from './routes/_authenticated/_admin/internal.design-system'
+import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
 import { Route as ApiPublicV1MembersRouteImport } from './routes/api/public/v1/members'
 import { Route as ApiPublicV1OrganizationRouteImport } from './routes/api/public/v1/organization'
 import { Route as AuthenticatedAdminAdminAiGeneratorRouteImport } from './routes/_authenticated/_admin/admin/ai.generator'
@@ -272,6 +273,12 @@ const AuthenticatedAdminInternalDesignSystemRoute =
     path: '/internal/design-system',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiPublicHooksQueueWorkerRoute =
+  ApiPublicHooksQueueWorkerRouteImport.update({
+    id: '/api/public/hooks/queue-worker',
+    path: '/api/public/hooks/queue-worker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicV1MembersRoute = ApiPublicV1MembersRouteImport.update({
   id: '/api/public/v1/members',
   path: '/api/public/v1/members',
@@ -327,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
   '/admin/': typeof AuthenticatedAdminAdminIndexRoute
@@ -370,6 +378,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
   '/admin': typeof AuthenticatedAdminAdminIndexRoute
@@ -416,6 +425,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/_authenticated/_admin/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
+  '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
   '/_authenticated/_admin/admin/': typeof AuthenticatedAdminAdminIndexRoute
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/topics'
     | '/internal/design-system'
+    | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
     | '/admin/'
@@ -504,6 +515,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/topics'
     | '/internal/design-system'
+    | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
     | '/admin'
@@ -549,6 +561,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/settings'
     | '/_authenticated/_admin/admin/topics'
     | '/_authenticated/_admin/internal/design-system'
+    | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
     | '/_authenticated/_admin/admin/'
@@ -571,6 +584,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
+  ApiPublicHooksQueueWorkerRoute: typeof ApiPublicHooksQueueWorkerRoute
   ApiPublicV1MembersRoute: typeof ApiPublicV1MembersRoute
   ApiPublicV1OrganizationRoute: typeof ApiPublicV1OrganizationRoute
 }
@@ -857,6 +871,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminInternalDesignSystemRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/hooks/queue-worker': {
+      id: '/api/public/hooks/queue-worker'
+      path: '/api/public/hooks/queue-worker'
+      fullPath: '/api/public/hooks/queue-worker'
+      preLoaderRoute: typeof ApiPublicHooksQueueWorkerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/members': {
       id: '/api/public/v1/members'
       path: '/api/public/v1/members'
@@ -997,6 +1018,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,
+  ApiPublicHooksQueueWorkerRoute: ApiPublicHooksQueueWorkerRoute,
   ApiPublicV1MembersRoute: ApiPublicV1MembersRoute,
   ApiPublicV1OrganizationRoute: ApiPublicV1OrganizationRoute,
 }

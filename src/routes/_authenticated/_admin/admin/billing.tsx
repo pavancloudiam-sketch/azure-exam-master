@@ -27,6 +27,8 @@ import {
   markRefundProcessed,
 } from "@/features/billing/services/admin-billing-service";
 import { NOTIFICATION_LABELS, formatInr } from "@/features/billing/types";
+import { QueueHealthPanel } from "@/features/queue/components/QueueHealthPanel";
+import { requeueEmailJob } from "@/features/queue/services/queue-service";
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/billing")({
   head: () => ({
@@ -93,6 +95,16 @@ function AdminBillingPage() {
       void queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
     },
     onError: (e: Error) => notify.error("Could not record delivery", e.message),
+  });
+
+  const requeue = useMutation({
+    mutationFn: (id: string) => requeueEmailJob(id),
+    onSuccess: () => {
+      notify.success("Message requeued", "The worker will pick it up on the next run.");
+      void queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
+      void queryClient.invalidateQueries({ queryKey: ["queue-health"] });
+    },
+    onError: (e: Error) => notify.error("Could not requeue the message", e.message),
   });
 
   const testOrder = useMutation({
@@ -210,6 +222,9 @@ function AdminBillingPage() {
         <h2 id="queue-heading" className="mb-3 text-lg font-semibold">
           Message queue
         </h2>
+        <div className="mb-4">
+          <QueueHealthPanel />
+        </div>
         {notifications.isLoading ? (
           <SkeletonList rows={3} />
         ) : notifications.error ? (
@@ -242,7 +257,7 @@ function AdminBillingPage() {
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">{n.body}</p>
                 {n.status !== "sent" ? (
-                  <div className="mt-3">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <SecondaryButton
                       size="sm"
                       loading={send.isPending}
@@ -250,6 +265,15 @@ function AdminBillingPage() {
                     >
                       Record delivery
                     </SecondaryButton>
+                    {n.status === "dead_letter" ? (
+                      <SecondaryButton
+                        size="sm"
+                        loading={requeue.isPending}
+                        onClick={() => requeue.mutate(n.id)}
+                      >
+                        Requeue
+                      </SecondaryButton>
+                    ) : null}
                   </div>
                 ) : null}
               </SurfaceCard>
