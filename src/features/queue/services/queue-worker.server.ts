@@ -44,6 +44,7 @@ export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
   const summary: QueueRunSummary = {
     emails: { claimed: 0, sent: 0, retried: 0, deadLettered: 0 },
     webhooks: { claimed: 0, delivered: 0, retried: 0, deadLettered: 0 },
+    retention: { status: "skipped" },
     duration_ms: 0,
   };
 
