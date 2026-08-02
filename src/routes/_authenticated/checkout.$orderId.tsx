@@ -212,9 +212,9 @@ function CheckoutPage() {
                   <SecondaryButton onClick={() => void status.refetch()}>
                     <RefreshCw className="mr-2 size-4" aria-hidden="true" /> Refresh status
                   </SecondaryButton>
-                  <PrimaryButton onClick={handleCancel} variant="ghost">
+                  <SecondaryButton onClick={handleCancel}>
                     Cancel payment
-                  </PrimaryButton>
+                  </SecondaryButton>
                 </div>
               </div>
             )}
