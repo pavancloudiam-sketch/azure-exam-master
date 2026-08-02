@@ -54,6 +54,7 @@ import { Route as AuthenticatedAdminAdminOrganizationsRouteImport } from './rout
 import { Route as AuthenticatedAdminAdminPrivacyRouteImport } from './routes/_authenticated/_admin/admin/privacy'
 import { Route as AuthenticatedAdminAdminQuestionsRouteImport } from './routes/_authenticated/_admin/admin/questions'
 import { Route as AuthenticatedAdminAdminSettingsRouteImport } from './routes/_authenticated/_admin/admin/settings'
+import { Route as AuthenticatedAdminAdminStudentsRouteImport } from './routes/_authenticated/_admin/admin/students'
 import { Route as AuthenticatedAdminAdminTopicsRouteImport } from './routes/_authenticated/_admin/admin/topics'
 import { Route as AuthenticatedAdminInternalDesignSystemRouteImport } from './routes/_authenticated/_admin/internal.design-system'
 import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
@@ -305,6 +306,12 @@ const AuthenticatedAdminAdminSettingsRoute =
     path: '/admin/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAdminStudentsRoute =
+  AuthenticatedAdminAdminStudentsRouteImport.update({
+    id: '/admin/students',
+    path: '/admin/students',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdminTopicsRoute =
   AuthenticatedAdminAdminTopicsRouteImport.update({
     id: '/admin/topics',
@@ -383,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -434,6 +442,7 @@ export interface FileRoutesByTo {
   '/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -488,6 +497,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/privacy': typeof AuthenticatedAdminAdminPrivacyRoute
   '/_authenticated/_admin/admin/questions': typeof AuthenticatedAdminAdminQuestionsRoute
   '/_authenticated/_admin/admin/settings': typeof AuthenticatedAdminAdminSettingsRoute
+  '/_authenticated/_admin/admin/students': typeof AuthenticatedAdminAdminStudentsRoute
   '/_authenticated/_admin/admin/topics': typeof AuthenticatedAdminAdminTopicsRoute
   '/_authenticated/_admin/internal/design-system': typeof AuthenticatedAdminInternalDesignSystemRoute
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
@@ -541,6 +551,7 @@ export interface FileRouteTypes {
     | '/admin/privacy'
     | '/admin/questions'
     | '/admin/settings'
+    | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -592,6 +603,7 @@ export interface FileRouteTypes {
     | '/admin/privacy'
     | '/admin/questions'
     | '/admin/settings'
+    | '/admin/students'
     | '/admin/topics'
     | '/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -645,6 +657,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/privacy'
     | '/_authenticated/_admin/admin/questions'
     | '/_authenticated/_admin/admin/settings'
+    | '/_authenticated/_admin/admin/students'
     | '/_authenticated/_admin/admin/topics'
     | '/_authenticated/_admin/internal/design-system'
     | '/api/public/hooks/queue-worker'
@@ -993,6 +1006,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/admin/students': {
+      id: '/_authenticated/_admin/admin/students'
+      path: '/admin/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AuthenticatedAdminAdminStudentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/admin/topics': {
       id: '/_authenticated/_admin/admin/topics'
       path: '/admin/topics'
@@ -1066,6 +1086,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdminPrivacyRoute: typeof AuthenticatedAdminAdminPrivacyRoute
   AuthenticatedAdminAdminQuestionsRoute: typeof AuthenticatedAdminAdminQuestionsRoute
   AuthenticatedAdminAdminSettingsRoute: typeof AuthenticatedAdminAdminSettingsRoute
+  AuthenticatedAdminAdminStudentsRoute: typeof AuthenticatedAdminAdminStudentsRoute
   AuthenticatedAdminAdminTopicsRoute: typeof AuthenticatedAdminAdminTopicsRoute
   AuthenticatedAdminInternalDesignSystemRoute: typeof AuthenticatedAdminInternalDesignSystemRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
@@ -1086,6 +1107,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdminPrivacyRoute: AuthenticatedAdminAdminPrivacyRoute,
   AuthenticatedAdminAdminQuestionsRoute: AuthenticatedAdminAdminQuestionsRoute,
   AuthenticatedAdminAdminSettingsRoute: AuthenticatedAdminAdminSettingsRoute,
+  AuthenticatedAdminAdminStudentsRoute: AuthenticatedAdminAdminStudentsRoute,
   AuthenticatedAdminAdminTopicsRoute: AuthenticatedAdminAdminTopicsRoute,
   AuthenticatedAdminInternalDesignSystemRoute:
     AuthenticatedAdminInternalDesignSystemRoute,
