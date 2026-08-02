@@ -11,6 +11,7 @@ import {
 export type QueueRunSummary = {
   emails: { claimed: number; sent: number; retried: number; deadLettered: number };
   webhooks: { claimed: number; delivered: number; retried: number; deadLettered: number };
+  retention: { status: string };
   duration_ms: number;
 };
 
