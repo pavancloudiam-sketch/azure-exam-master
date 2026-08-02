@@ -52,7 +52,7 @@ describe("Dashboard route", () => {
   it("links to the exam catalogue", () => {
     renderDashboard();
     const link = screen.getByRole("link", { name: "Browse practice exams" });
-    expect(link).toHaveAttribute("to", "/exams");
+    expect(link).toHaveAttribute("href", "/exams");
   });
 
   it("declares its own noindex head metadata", () => {
