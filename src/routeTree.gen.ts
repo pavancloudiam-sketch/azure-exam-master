@@ -36,6 +36,7 @@ import { Route as LegalDocSlugRouteImport } from './routes/legal/$docSlug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedAttemptAttemptIdRouteImport } from './routes/_authenticated/attempt.$attemptId'
+import { Route as AuthenticatedCheckoutOrderIdRouteImport } from './routes/_authenticated/checkout.$orderId'
 import { Route as AuthenticatedOrganizationBrandingRouteImport } from './routes/_authenticated/organization.branding'
 import { Route as AuthenticatedResultsAttemptIdRouteImport } from './routes/_authenticated/results.$attemptId'
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
@@ -63,6 +64,7 @@ import { Route as AuthenticatedExamsExamIdStartRouteImport } from './routes/_aut
 import { Route as ApiPublicHooksQueueWorkerRouteImport } from './routes/api/public/hooks/queue-worker'
 import { Route as ApiPublicV1MembersRouteImport } from './routes/api/public/v1/members'
 import { Route as ApiPublicV1OrganizationRouteImport } from './routes/api/public/v1/organization'
+import { Route as ApiPublicWebhooksRazorpayRouteImport } from './routes/api/public/webhooks/razorpay'
 import { Route as AuthenticatedAdminAdminAiGeneratorRouteImport } from './routes/_authenticated/_admin/admin/ai.generator'
 
 const IndexRoute = IndexRouteImport.update({
@@ -201,6 +203,12 @@ const AuthenticatedAttemptAttemptIdRoute =
   AuthenticatedAttemptAttemptIdRouteImport.update({
     id: '/attempt/$attemptId',
     path: '/attempt/$attemptId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCheckoutOrderIdRoute =
+  AuthenticatedCheckoutOrderIdRouteImport.update({
+    id: '/checkout/$orderId',
+    path: '/checkout/$orderId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOrganizationBrandingRoute =
@@ -361,6 +369,12 @@ const ApiPublicV1OrganizationRoute = ApiPublicV1OrganizationRouteImport.update({
   path: '/api/public/v1/organization',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWebhooksRazorpayRoute =
+  ApiPublicWebhooksRazorpayRouteImport.update({
+    id: '/api/public/webhooks/razorpay',
+    path: '/api/public/webhooks/razorpay',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminAdminAiGeneratorRoute =
   AuthenticatedAdminAdminAiGeneratorRouteImport.update({
     id: '/generator',
@@ -394,6 +408,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -420,6 +435,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/admin/': typeof AuthenticatedAdminAdminIndexRoute
   '/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -449,6 +465,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -475,6 +492,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/admin': typeof AuthenticatedAdminAdminIndexRoute
   '/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -507,6 +525,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/attempt/$attemptId': typeof AuthenticatedAttemptAttemptIdRoute
+  '/_authenticated/checkout/$orderId': typeof AuthenticatedCheckoutOrderIdRoute
   '/_authenticated/organization/branding': typeof AuthenticatedOrganizationBrandingRoute
   '/_authenticated/results/$attemptId': typeof AuthenticatedResultsAttemptIdRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -533,6 +552,7 @@ export interface FileRoutesById {
   '/api/public/hooks/queue-worker': typeof ApiPublicHooksQueueWorkerRoute
   '/api/public/v1/members': typeof ApiPublicV1MembersRoute
   '/api/public/v1/organization': typeof ApiPublicV1OrganizationRoute
+  '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
   '/_authenticated/_admin/admin/': typeof AuthenticatedAdminAdminIndexRoute
   '/_authenticated/_admin/admin/ai/generator': typeof AuthenticatedAdminAdminAiGeneratorRoute
 }
@@ -564,6 +584,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/attempt/$attemptId'
+    | '/checkout/$orderId'
     | '/organization/branding'
     | '/results/$attemptId'
     | '/review/$attemptId'
@@ -590,6 +611,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/admin/'
     | '/admin/ai/generator'
   fileRoutesByTo: FileRoutesByTo
@@ -619,6 +641,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/attempt/$attemptId'
+    | '/checkout/$orderId'
     | '/organization/branding'
     | '/results/$attemptId'
     | '/review/$attemptId'
@@ -645,6 +668,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/admin'
     | '/admin/ai/generator'
   id:
@@ -676,6 +700,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/attempt/$attemptId'
+    | '/_authenticated/checkout/$orderId'
     | '/_authenticated/organization/branding'
     | '/_authenticated/results/$attemptId'
     | '/_authenticated/review/$attemptId'
@@ -702,6 +727,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/queue-worker'
     | '/api/public/v1/members'
     | '/api/public/v1/organization'
+    | '/api/public/webhooks/razorpay'
     | '/_authenticated/_admin/admin/'
     | '/_authenticated/_admin/admin/ai/generator'
   fileRoutesById: FileRoutesById
@@ -726,6 +752,7 @@ export interface RootRouteChildren {
   ApiPublicHooksQueueWorkerRoute: typeof ApiPublicHooksQueueWorkerRoute
   ApiPublicV1MembersRoute: typeof ApiPublicV1MembersRoute
   ApiPublicV1OrganizationRoute: typeof ApiPublicV1OrganizationRoute
+  ApiPublicWebhooksRazorpayRoute: typeof ApiPublicWebhooksRazorpayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -919,6 +946,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAttemptAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/checkout/$orderId': {
+      id: '/_authenticated/checkout/$orderId'
+      path: '/checkout/$orderId'
+      fullPath: '/checkout/$orderId'
+      preLoaderRoute: typeof AuthenticatedCheckoutOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/organization/branding': {
       id: '/_authenticated/organization/branding'
       path: '/branding'
@@ -1108,6 +1142,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrganizationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/webhooks/razorpay': {
+      id: '/api/public/webhooks/razorpay'
+      path: '/api/public/webhooks/razorpay'
+      fullPath: '/api/public/webhooks/razorpay'
+      preLoaderRoute: typeof ApiPublicWebhooksRazorpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/_admin/admin/ai/generator': {
       id: '/_authenticated/_admin/admin/ai/generator'
       path: '/generator'
@@ -1211,6 +1252,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedStudyRoute: typeof AuthenticatedStudyRoute
   AuthenticatedAttemptAttemptIdRoute: typeof AuthenticatedAttemptAttemptIdRoute
+  AuthenticatedCheckoutOrderIdRoute: typeof AuthenticatedCheckoutOrderIdRoute
   AuthenticatedResultsAttemptIdRoute: typeof AuthenticatedResultsAttemptIdRoute
   AuthenticatedReviewAttemptIdRoute: typeof AuthenticatedReviewAttemptIdRoute
   AuthenticatedExamsExamIdStartRoute: typeof AuthenticatedExamsExamIdStartRoute
@@ -1230,6 +1272,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedStudyRoute: AuthenticatedStudyRoute,
   AuthenticatedAttemptAttemptIdRoute: AuthenticatedAttemptAttemptIdRoute,
+  AuthenticatedCheckoutOrderIdRoute: AuthenticatedCheckoutOrderIdRoute,
   AuthenticatedResultsAttemptIdRoute: AuthenticatedResultsAttemptIdRoute,
   AuthenticatedReviewAttemptIdRoute: AuthenticatedReviewAttemptIdRoute,
   AuthenticatedExamsExamIdStartRoute: AuthenticatedExamsExamIdStartRoute,
@@ -1259,6 +1302,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksQueueWorkerRoute: ApiPublicHooksQueueWorkerRoute,
   ApiPublicV1MembersRoute: ApiPublicV1MembersRoute,
   ApiPublicV1OrganizationRoute: ApiPublicV1OrganizationRoute,
+  ApiPublicWebhooksRazorpayRoute: ApiPublicWebhooksRazorpayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -2676,6 +2676,7 @@ export type Database = {
           amount_minor: number
           created_at: string
           currency: string
+          expires_at: string | null
           failure_code: string | null
           failure_message: string | null
           id: string
@@ -2692,6 +2693,7 @@ export type Database = {
           amount_minor: number
           created_at?: string
           currency?: string
+          expires_at?: string | null
           failure_code?: string | null
           failure_message?: string | null
           id?: string
@@ -2708,6 +2710,7 @@ export type Database = {
           amount_minor?: number
           created_at?: string
           currency?: string
+          expires_at?: string | null
           failure_code?: string | null
           failure_message?: string | null
           id?: string
@@ -2723,6 +2726,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "payment_attempts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_webhook_events: {
+        Row: {
+          error: string | null
+          event_id: string
+          event_type: string
+          id: string
+          order_id: string | null
+          payload: Json
+          processed_at: string | null
+          provider: string
+          received_at: string
+          status: string
+        }
+        Insert: {
+          error?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          order_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: string
+          received_at?: string
+          status?: string
+        }
+        Update: {
+          error?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          order_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: string
+          received_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_webhook_events_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
@@ -3624,6 +3674,10 @@ export type Database = {
         }[]
       }
       apply_retention_policies: { Args: never; Returns: Json }
+      attach_upi_payment_reference: {
+        Args: { _metadata?: Json; _order_id: string; _reference: string }
+        Returns: undefined
+      }
       attempt_item_set: {
         Args: { _attempt_id: string }
         Returns: {
@@ -3757,6 +3811,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      cancel_upi_order: { Args: { _order_id: string }; Returns: undefined }
       claim_email_jobs: {
         Args: { _lease_seconds?: number; _limit?: number }
         Returns: {
@@ -3840,6 +3895,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      complete_payment_webhook: {
+        Args: {
+          _error?: string
+          _event_id: string
+          _provider?: string
+          _status: string
+        }
+        Returns: undefined
       }
       complete_webhook_job: {
         Args: {
@@ -3949,6 +4013,33 @@ export type Database = {
         }
         Returns: Json
       }
+      create_upi_order: {
+        Args: { _product_id: string; _ttl_minutes?: number }
+        Returns: {
+          cancelled_at: string | null
+          coupon_id: string | null
+          created_at: string
+          currency: string
+          discount_minor: number
+          id: string
+          notes: string | null
+          order_number: string
+          paid_at: string | null
+          placed_at: string | null
+          status: string
+          subtotal_minor: number
+          tax_minor: number
+          total_minor: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       decide_account_deletion: {
         Args: { _decision: string; _note?: string; _request_id: string }
         Returns: {
@@ -4049,12 +4140,14 @@ export type Database = {
         Returns: string
       }
       exam_is_available: { Args: { _exam_id: string }; Returns: boolean }
+      exam_requires_purchase: { Args: { _exam_id: string }; Returns: boolean }
       execute_account_deletion: { Args: { _request_id: string }; Returns: Json }
       execute_organization_deletion: {
         Args: { _request_id: string }
         Returns: Json
       }
       expire_due_access: { Args: never; Returns: Json }
+      expire_stale_upi_orders: { Args: never; Returns: number }
       export_my_data: {
         Args: never
         Returns: {
@@ -4100,6 +4193,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      fail_upi_payment: {
+        Args: {
+          _code?: string
+          _message?: string
+          _order_id: string
+          _provider_reference: string
+        }
+        Returns: Json
       }
       get_attempt_case_studies: {
         Args: { _attempt_id: string }
@@ -4205,6 +4307,7 @@ export type Database = {
           theme_mode: string
         }[]
       }
+      get_exam_access_map: { Args: never; Returns: Json }
       get_public_certifications: {
         Args: never
         Returns: {
@@ -4256,6 +4359,7 @@ export type Database = {
         }[]
       }
       get_queue_health: { Args: never; Returns: Json }
+      get_upi_payment_status: { Args: { _order_id: string }; Returns: Json }
       grant_admin_role: { Args: { _email: string }; Returns: string }
       has_exam_access: {
         Args: { _exam_id: string; _user_id: string }
@@ -4421,6 +4525,16 @@ export type Database = {
       record_export_download: {
         Args: { _export_id: string }
         Returns: undefined
+      }
+      record_payment_webhook: {
+        Args: {
+          _event_id: string
+          _event_type: string
+          _order_id: string
+          _payload: Json
+          _provider?: string
+        }
+        Returns: boolean
       }
       remove_organization_member: {
         Args: { _org_id: string; _user_id: string }
@@ -4677,6 +4791,15 @@ export type Database = {
       set_organization_webhook_status: {
         Args: { _status: string; _webhook_id: string }
         Returns: boolean
+      }
+      settle_upi_payment: {
+        Args: {
+          _method?: string
+          _order_id: string
+          _payload?: Json
+          _provider_reference: string
+        }
+        Returns: Json
       }
       start_attempt: {
         Args: {
