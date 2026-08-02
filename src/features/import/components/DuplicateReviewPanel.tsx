@@ -73,9 +73,47 @@ export function DuplicateReviewPanel({ batch }: { batch: ImportBatch }) {
     onError: (error: Error) => notify.error(error.message),
   });
 
+  const [confirmCommit, setConfirmCommit] = React.useState(false);
+
+  const commit = useMutation({
+    mutationFn: () => commitBatch(batch),
+    onSuccess: (report) => {
+      setConfirmCommit(false);
+      notify.success(
+        `Import committed — ${report.imported} question${report.imported === 1 ? "" : "s"} created` +
+          (report.skipped_invalid > 0 ? `, ${report.skipped_invalid} invalid row(s) skipped` : ""),
+      );
+      invalidate();
+      void queryClient.invalidateQueries({ queryKey: ["questions"] });
+      void queryClient.invalidateQueries({ queryKey: ["question-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["exams"] });
+      void queryClient.invalidateQueries({ queryKey: ["audit-logs"] });
+    },
+    onError: (error: Error) => {
+      setConfirmCommit(false);
+      notify.error(error.message);
+    },
+  });
+
   const data = rows.data ?? [];
   const flagged = data.filter((row) => row.duplicate_status !== "none" && row.duplicate_status !== "unchecked");
   const pending = flagged.filter((row) => row.review_status === "pending");
+  const validRows = data.filter((row) => row.is_valid);
+  const invalidRows = data.length - validRows.length;
+  const unresolved = validRows.filter(
+    (row) =>
+      row.duplicate_status !== "none" &&
+      row.duplicate_status !== "unchecked" &&
+      row.review_status !== "cleared",
+  ).length;
+  const isCommitted = batch.status === "committed";
+  const canCommit =
+    !isCommitted &&
+    batch.status === "staged" &&
+    Boolean(batch.attested_at) &&
+    validRows.length > 0 &&
+    unresolved === 0 &&
+    new Date(batch.expires_at).getTime() > Date.now();
 
   const columns: Column<ImportStagedRow>[] = [
     { key: "row", header: "Row", render: (row) => <span className="font-mono text-xs">{row.row_number}</span> },
