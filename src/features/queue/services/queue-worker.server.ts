@@ -41,7 +41,11 @@ function log(code: string, message: string, context: Record<string, unknown> = {
  * or dead-letters an exhausted job, and writes the audit row. The worker itself is
  * stateless and safe to re-run at any time.
  */
-export async function runQueueWorker(batchSize = 10): Promise<QueueRunSummary> {
+export async function runQueueWorker(
+  batchSize = 10,
+  /** Correlation id for this run; the cron route passes the request id through. */
+  runId: string = globalThis.crypto?.randomUUID?.() ?? String(Date.now()),
+): Promise<QueueRunSummary> {
   const startedAt = Date.now();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
