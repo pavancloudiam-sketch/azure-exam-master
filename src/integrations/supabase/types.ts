@@ -4116,6 +4116,7 @@ export type Database = {
       get_attempt_questions: {
         Args: { _attempt_id: string }
         Returns: {
+          case_study_id: string
           options: Json
           points: number
           question_id: string
