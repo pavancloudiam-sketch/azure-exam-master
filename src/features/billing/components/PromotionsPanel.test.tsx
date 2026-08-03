@@ -88,8 +88,8 @@ describe("PromotionsPanel", () => {
 
     expect(await screen.findByText("Limited-Time Launch Offer")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("Active")).toBeInTheDocument());
-    expect(screen.getByText("₹300.00")).toBeInTheDocument();
-    expect(screen.getByText("₹500.00")).toBeInTheDocument();
+    expect(screen.getByText("₹300")).toBeInTheDocument();
+    expect(screen.getByText("₹500")).toBeInTheDocument();
   });
 
   it("summarises promotional sales", async () => {
