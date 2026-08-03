@@ -67,32 +67,63 @@ export type PromotionRecord = {
   priority: number;
   created_at: string;
   updated_at: string;
+  created_by: string | null;
+  updated_by: string | null;
+
   products: { name: string } | null;
 };
 
 export type PromotionReportRow = {
   promotion_id: string;
-  promotion_name: string;
+  name: string;
+  product_id: string;
   product_name: string;
+  promo_amount_minor: number;
   starts_at: string;
   ends_at: string;
+  time_zone: string;
   is_active: boolean;
-  orders_count: number;
-  paid_orders_count: number;
-  gross_regular_minor: number;
-  discount_given_minor: number;
-  net_collected_minor: number;
+  allow_coupon_stacking: boolean;
+  priority: number;
+  paid_orders: number;
+  pending_orders: number;
+  expired_orders: number;
+  students: number;
+  gross_minor: number;
+  discount_minor: number;
+  collected_minor: number;
 };
 
 export type SalesSummary = {
-  paid_orders: number;
-  promo_orders: number;
-  coupon_orders: number;
   regular_orders: number;
-  gross_regular_minor: number;
-  discount_minor: number;
-  net_collected_minor: number;
+  promotional_orders: number;
+  gross_minor: number;
+  promotional_discount_minor: number;
+  coupon_discount_minor: number;
+  collected_minor: number;
+  pending_promotional_orders: number;
+  expired_promotional_orders: number;
 };
+
+export type PromotionStatus = "Draft" | "Scheduled" | "Active" | "Expired" | "Disabled";
+
+/**
+ * Status derived from the promotion row plus a *server* timestamp. The caller
+ * must pass the clock reported by the database, never `new Date()` alone.
+ */
+export function promotionStatus(
+  promo: { is_active: boolean; starts_at: string; ends_at: string },
+  serverNow: Date,
+): PromotionStatus {
+  const start = new Date(promo.starts_at).getTime();
+  const end = new Date(promo.ends_at).getTime();
+  const now = serverNow.getTime();
+  if (!promo.is_active) return now < start ? "Draft" : now > end ? "Expired" : "Disabled";
+  if (now < start) return "Scheduled";
+  if (now > end) return "Expired";
+  return "Active";
+}
+
 
 export type OfferCountdown = {
   expired: boolean;

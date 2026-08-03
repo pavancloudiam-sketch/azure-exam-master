@@ -27,8 +27,11 @@ import {
   markRefundProcessed,
 } from "@/features/billing/services/admin-billing-service";
 import { NOTIFICATION_LABELS, formatInr } from "@/features/billing/types";
+import { PromotionsPanel } from "@/features/billing/components/PromotionsPanel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QueueHealthPanel } from "@/features/queue/components/QueueHealthPanel";
 import { requeueEmailJob } from "@/features/queue/services/queue-service";
+
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/billing")({
   head: () => ({
@@ -124,14 +127,26 @@ function AdminBillingPage() {
   return (
     <PageShell
       title="Billing operations"
-      description="Refund review, message delivery and test-mode order simulation."
+      description="Promotional pricing, refund review, message delivery and test-mode order simulation."
     >
+      <Tabs defaultValue="promotions">
+        <TabsList>
+          <TabsTrigger value="promotions">Promotions</TabsTrigger>
+          <TabsTrigger value="operations">Operations</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="promotions" className="mt-6">
+          <PromotionsPanel />
+        </TabsContent>
+
+        <TabsContent value="operations" className="mt-6">
       <StatusAlert tone="warning" title="Test mode">
         No payment provider is connected. Test orders move no money, and message delivery is
         recorded rather than emailed. Every action here is written to the financial audit log.
       </StatusAlert>
 
       <section className="mt-8" aria-labelledby="refunds-heading">
+
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <h2 id="refunds-heading" className="text-lg font-semibold">
             Refund requests
@@ -323,6 +338,9 @@ function AdminBillingPage() {
           </div>
         </SurfaceCard>
       </section>
+        </TabsContent>
+      </Tabs>
     </PageShell>
+
   );
 }
