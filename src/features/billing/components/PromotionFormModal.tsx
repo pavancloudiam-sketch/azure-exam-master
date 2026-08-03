@@ -234,7 +234,12 @@ export function PromotionFormModal({
           onCheckedChange={(c) => set("allow_coupon_stacking", c)}
           hint="Left off, a coupon and this offer never combine — the student simply gets whichever price is lower."
         />
-        {errors?.["form"] ? <StatusAlert tone="error">{errors["form"]}</StatusAlert> : null}
+        {errors?.["form"] ? (
+          <StatusAlert tone="error" title="Check the form">
+            {errors["form"]}
+          </StatusAlert>
+        ) : null}
+
       </div>
     </Modal>
   );
