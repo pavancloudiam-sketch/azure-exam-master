@@ -9,7 +9,7 @@ import {
 import { promotionStatus } from "../types/pricing";
 
 const base: PromotionFormValues = {
-  product_id: "11111111-1111-1111-1111-111111111111",
+  product_id: "d90b218b-fba0-4b23-9f86-c6f698f275d4",
   name: "Launch Offer",
   description: "",
   promo_rupees: "300",
