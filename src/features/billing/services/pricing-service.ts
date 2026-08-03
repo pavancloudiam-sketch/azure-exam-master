@@ -37,7 +37,7 @@ export async function listPromotions(): Promise<PromotionRecord[]> {
   const { data, error } = await supabase
     .from("price_promotions")
     .select(
-      "id, product_id, name, description, currency, promo_amount_minor, starts_at, ends_at, time_zone, is_active, allow_coupon_stacking, priority, created_at, updated_at, products(name)",
+      "id, product_id, name, description, currency, promo_amount_minor, starts_at, ends_at, time_zone, is_active, allow_coupon_stacking, priority, created_at, updated_at, created_by, updated_by, products(name)",
     )
     .order("starts_at", { ascending: false });
   if (error) throw error;
@@ -56,24 +56,47 @@ export type PromotionInput = {
   priority?: number;
 };
 
+async function currentUserId(): Promise<string | null> {
+  const { data } = await supabase.auth.getUser();
+  return data.user?.id ?? null;
+}
+
 export async function createPromotion(input: PromotionInput): Promise<void> {
-  const { error } = await supabase
-    .from("price_promotions")
-    .insert({ ...input, time_zone: "Asia/Kolkata" });
+  const actor = await currentUserId();
+  const { error } = await supabase.from("price_promotions").insert({
+    ...input,
+    time_zone: "Asia/Kolkata",
+    created_by: actor,
+    updated_by: actor,
+  });
   if (error) throw error;
 }
 
 export async function updatePromotion(id: string, input: Partial<PromotionInput>): Promise<void> {
-  const { error } = await supabase.from("price_promotions").update(input).eq("id", id);
+  const actor = await currentUserId();
+  const { error } = await supabase
+    .from("price_promotions")
+    .update({ ...input, updated_by: actor })
+    .eq("id", id);
   if (error) throw error;
 }
 
 export async function setPromotionActive(id: string, isActive: boolean): Promise<void> {
-  const { error } = await supabase
-    .from("price_promotions")
-    .update({ is_active: isActive })
-    .eq("id", id);
-  if (error) throw error;
+  await updatePromotion(id, { is_active: isActive });
+}
+
+/** Resolves admin actor ids to a readable label for the "last changed by" column. */
+export async function listActorLabels(ids: string[]): Promise<Record<string, string>> {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (unique.length === 0) return {};
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, email, full_name")
+    .in("id", unique);
+  if (error) return {};
+  const map: Record<string, string> = {};
+  for (const row of data ?? []) map[row.id] = row.full_name || row.email || row.id;
+  return map;
 }
 
 export async function getPromotionReport(): Promise<PromotionReportRow[]> {
@@ -87,6 +110,7 @@ export async function getPricingSalesSummary(): Promise<SalesSummary | null> {
   if (error) throw error;
   return (data ?? null) as unknown as SalesSummary | null;
 }
+
 
 export type AdminProductPrice = {
   id: string;
