@@ -361,9 +361,11 @@ export function PromotionsPanel() {
             : "Inside its date window, students will immediately see the promotional price."
         }
         confirmLabel={toggling?.is_active ? "Disable offer" : "Enable offer"}
-        onConfirm={() => toggling && toggle.mutate(toggling)}
-        loading={toggle.isPending}
+        onConfirm={() => {
+          if (toggling) toggle.mutate(toggling);
+        }}
       />
+
     </div>
   );
 }
