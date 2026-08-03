@@ -353,7 +353,10 @@ export function PromotionsPanel() {
 
       <ConfirmDialog
         open={Boolean(toggling)}
-        onOpenChange={(open) => !open && setToggling(null)}
+        onOpenChange={(open) => {
+          if (!open) setToggling(null);
+        }}
+
         title={toggling?.is_active ? "Disable this promotion?" : "Enable this promotion?"}
         description={
           toggling?.is_active
