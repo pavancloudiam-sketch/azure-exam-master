@@ -27,8 +27,11 @@ import {
   markRefundProcessed,
 } from "@/features/billing/services/admin-billing-service";
 import { NOTIFICATION_LABELS, formatInr } from "@/features/billing/types";
+import { PromotionsPanel } from "@/features/billing/components/PromotionsPanel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QueueHealthPanel } from "@/features/queue/components/QueueHealthPanel";
 import { requeueEmailJob } from "@/features/queue/services/queue-service";
+
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/billing")({
   head: () => ({
@@ -335,6 +338,9 @@ function AdminBillingPage() {
           </div>
         </SurfaceCard>
       </section>
+        </TabsContent>
+      </Tabs>
     </PageShell>
+
   );
 }
