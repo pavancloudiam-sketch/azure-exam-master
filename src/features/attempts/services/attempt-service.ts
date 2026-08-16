@@ -148,12 +148,14 @@ export async function getAttemptCaseStudies(attemptId: string): Promise<AttemptC
 }
 
 export async function listAttemptAnswers(attemptId: string): Promise<AttemptAnswer[]> {
+  // Grading columns (is_correct, earned_points) are intentionally excluded: they are
+  // only available after submission via the gated review/result RPCs.
   const { data, error } = await supabase
     .from("attempt_answers")
-    .select("*")
+    .select("id, attempt_id, question_id, selected_option_ids, answered_at, marked_for_review, statement_responses")
     .eq("attempt_id", attemptId);
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((row) => ({ ...row, is_correct: null, earned_points: null })) as AttemptAnswer[];
 }
 
 export async function saveAnswer(params: {
